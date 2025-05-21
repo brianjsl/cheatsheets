@@ -1,0 +1,986 @@
+\documentclass[9pt]{article}
+\usepackage{cheatsheet}
+
+\begin{document}
+\raggedright
+% \small
+\begin{multicols}{2}
+
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{\underline{6.S966 Final Exam Cheat Sheet}} \\
+\end{center}
+% You can even have references
+% \rule{0.3\linewidth}{0.25pt}
+% \scriptsize
+% \bibliographystyle{abstract}
+% \bibliography{refFile}
+
+\section{Group Theory (L1-2)}
+
+A \textbf{group} $(G,*)$ is a monoid with inverses. That is, it is closed, associative, there is an identity, and inverses. \\
+
+The \textbf{order} of a (finite) group is $|G|$. 
+
+It is easier for a group to be represented as a \textbf{multiplication table} (or \textbf{Cayley table}) where the multiplication of groups is mapped. 
+
+If a group is \textbf{abelian} (ie. the elements commute) the multiplication table is symmetric.
+
+\begin{theorem}[Rearrangement Theorem]
+    If we have $G=\{E,A_1,\cdots,A_n\}$ then $\{A_kE,A_kA_1,\cdots,A_kA_n\}=G$. That is, each row and column
+    of the multiplication table of $G$ contains each element once.
+\end{theorem}
+
+A subset $H \subset G$ remains closed (and thus forms a group), we say $H \le G$ is a subgroup of $G$.
+
+An element $B \in G$ is said to be \textbf{conjugate} to $A \in G$ 
+if $\exists X \in G$ such that $B=XAX^{-1}$. Conjugacy partitions the group $G$. In symmetry groups, each conjugacy class represents
+a distinct type of symmetry.
+
+A \textbf{homomorphism} $\varphi$ is a map $\varphi:G \to G$ such that $\varphi(xy)=\varphi(x)\varphi(y)$. A bijective homomorphism 
+is called an \textbf{isomorphism}. 
+
+For a subset $B \subset G$, the \textbf{left cosets} of $g$ are  defined $gB=\{gb \mid \forall b \in B\}$. The \textbf{right cosets} are defined similarly.
+
+A subgroup $H \le G$ is said to be \textbf{normal} (or \textbf{self-conjugate}), denoted $H \triangleleft G$, if $\forall g \in G$, $gBg^{-1} = B$ (that is, $\forall b \in B, gbg^{-1} \in B$).
+
+For a normal subgroup $H \triangleleft G$, the left and right cosets are equivalent. We thus define the \textbf{quotient group} (or \textbf{factor group}) $G / H$ to be the cosets of $H$. 
+
+\begin{theorem}[Lagrange's Theorem]
+    For a group $G$, normal subgroup $H \triangleleft G$, we have
+    $|G|=|G/H||H|$. That is, the order of the subgroup divides the
+    order of the group.
+\end{theorem}
+
+\section{Linear Algebra (L3)}
+
+A \textbf{vector space} $(V,\mathbb{F},+,\cdot)$ satisfies the following:
+\begin{itemize}
+  \setlength\itemsep{0em}
+    \item $(V,+)$ forms an abelian group.
+    \item Scalar Multiplication, Identity in $\mathbb{F}$, Distributivity (wrt both vectors and scalars)
+\end{itemize}
+
+The \textbf{Kroneker product} of $A \in \mathbb{F}^{m,n}$, $B \in \mathbb{F}^{p,q}$ is defined $$A \kronk B = \begin{bmatrix}
+    a_{11}B & \cdots & a_{m,n}B \\
+    \vdots & \ddots & \vdots \\
+    a_{m1}B & \cdots & a_{mn}B
+\end{bmatrix}$$
+That is, $A \kronk B \in \mathbb{F}^{mp,nq}$. 
+
+The \textbf{Kroneker sum} of $A \in \mathbb{F}^{n, n}$ and $B \in \mathbb{F}^{m,m}$ is given by: 
+$$A \kronkplus B := (\mathbf{I}_{m,m} \kronk A) + (B \kronk \mathbf{I}_{n,n})$$
+
+\begin{theorem}[Vectorized Sylvester Equation]
+   We have for $A \in \mathbb{F}^{m,m}$, $B \in \mathbb{F}^{n,n}$, 
+   $X \in \mathbb{F}^{m,n}$, $C \in \mathbb{F}^{m,n}$, the \textbf{Sylvester Equation} $$AX+XB=C$$ can be rewritten as:
+   $$[(\textbf{I}_{n,n}\kronk A)+ (B^T \kronk \mathbf{I}_{m,m})]\text{vec}(X)=\text{vec}(C)$$
+\end{theorem}
+
+Two matrices $S \in \mathbb{F}^{m, m}$ and $R\in \mathbb{F}^{n, n}$ are said to be \textbf{similar} if $\exists Q \in \mathbb{F}^{m \times n}$ such that
+$$SQ=QR$$
+In general, to find $Q$, we can rewrite:
+\begin{equation}
+    SQ-QR=[S \kronkplus (-R^{T})]\text{vec}(Q)=0
+\end{equation}
+and use Gaussian elimination.
+
+\section{Representation of Finite Groups (L4-6)}
+
+\subsection{Group Representations}
+We define a \textbf{group representation} $D$ on a vector space
+$V$ to be a group homomorphism $D: G \to \text{GL}(V)$. We refer
+to both the matrix, the vector space $\text{GL}(V)$, and the function $D$ as the group
+representation. We define the \textbf{dimensionality} of that representation 
+to be $|V|$.
+
+\textbf{Similarity Transforms:} Group representations are not unique: namely, for any unitary $\mathcal{U}$, $\mathcal{U}D(g)\mathcal{U}^{-1}$ is also a group representation. 
+
+\textbf{Direct Sums}: for any two representations $D(g), D'(g)$, 
+we can combine their vector spaces to get a new (block-diagonal) representation:
+$$(D(g),V) \oplus (D'(g),V') = \begin{pmatrix} D(g) & 0 \\ 0 & D'(g) \end{pmatrix}$$
+
+A useful theorem:
+
+\begin{theorem}[Maschke's Theorem]
+     Every representation of a finite group $G$ over a field 
+ $\mathbb{F}$ with characteristic not dividing the order of 
+$G$ is a direct sum of irreducible representations
+\end{theorem}
+\subsection{Irreducible and Unitary Representations}
+
+A group representation $D$ is said to be \textbf{reducible} if there exists
+a similarity transform $\mathcal{U}$ such that $\forall g \in G$, $\mathcal{U}D(g)\mathcal{U}^{-1}$ can be brought into block-diagonal form.
+
+Conversely, a group representation that is not reducible is said to be irreducible. 
+
+Group representations can be brought into unitary form:
+\begin{theorem}[Unitary Representation Theorem]
+    Every group representation (with nonvanishing determinant) can be brought 
+    into unitary form by a similarity transform.
+\end{theorem}
+
+\subsection{Orthogonality Theorems}
+
+Schur's Lemma and the Wonderful Orthogonality Theorem serve as tests for determining irreducibility of group representations:
+
+\begin{lemma}[Schur's Lemma]
+We have the following irreducability relations:
+\begin{enumerate}[label=\arabic*.]
+    \item If a matrix matrix $M$ commutes with the representations
+        of the group elements $A_1,\cdots,A_h$ (here $D(g_i)=A_i$
+        $$MA_i=A_iM$$
+        then either $M$ is a constant matrix or it is reducible.
+    \item If the matrix representations $D^{(1)}(g_1),\cdots,D^{(1)}(g_h)$ and $D^{(2)}(g_1),\cdots,D^{(2)}(g_h)$ are two irreducible representations of a given group
+    of dimensionality $l_1$ and $l_2$ respectively, then if there exists a matrix $M \in \mathbb{F}^{l_1 \times l_2}$ such that
+    $$MD^{(1)}(g_x)=D^{(2)}(g_x)M$$ $\forall g_x \in G$, then either:
+    \begin{enumerate}[label=(\roman*)]
+        \item If $l_1 \ne l_2$, $M = 0$.
+        \item If $l_1=l_2$, then either $M=0$ or $D^{(1)}$ 
+        and $D^{(2)}$ differ by a similarity transform.
+    \end{enumerate}
+\end{enumerate}
+\end{lemma}
+
+This leads to the key orthogonality theorem for checking irreducibility:
+
+\begin{theorem}[Wonderful Orthogonality Theorem]
+    Suppose we have two inequivalent, irreducible, group representations $D^{\Gamma_j}$ and 
+    $D^{\Gamma_{j'}}$ of dimension $l_j$ and $l_j'$ 
+    respectively. Denote by $h=|G|$. We then have the following orthogonality relation: 
+    \begin{equation}
+        \sum_{g \in G}D_{\mu\nu}^{(\Gamma_{j})}(g)D_{\nu'\mu'}^{(\Gamma_{j'})}(g^{-1}) = \frac{h}{l_j}
+        \delta_{\Gamma_j\Gamma_{j'}}\delta_{\mu\mu'}\delta_{\nu\nu'}
+    \end{equation}
+    If the representations are unitary (or brought into unitary form) this becomes:
+    \begin{equation}
+        \sum_{g \in G}D_{\mu\nu}^{(\Gamma_{j})}(g)[D_{\mu'\nu'}^{(\Gamma_{j'})}(g)]^* = \frac{h}{l_j}
+    \delta_{\Gamma_j\Gamma_{j'}}\delta_{\mu\mu'}\delta_{\nu\nu'}
+    \end{equation}
+\end{theorem}
+This orthogonality relations in fact tells us that $\sum l_j^2 \le h$. In fact this is an equality.for 
+
+\subsection{Character of a Representation}
+
+The \textbf{character} of a matrix representation $D^{\Gamma_j}(g)$
+for a group element $g$is the trace:
+$$\chi^{\Gamma_j}(g)=\text{tr} D^{(\Gamma_j)}(g)= \sum_{\mu=1}^{l_j}D^{(\Gamma_j)}(R)_{\mu\mu} $$
+
+\begin{theorem}
+    The character for each element in a class is the same.
+\end{theorem}
+
+This leads us to a natural encoding of information of the group in
+the form of a \textbf{character table}, which has irreps as the
+rows and the conjugacy classes as the columns. For each row, column
+pair, we have the character of that conjugacy class. For example, 
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{lccc}
+    \toprule
+     & $1C_1$ & $3C_2$ & $2C_3$ \\
+     & $X(E)$ & X(A,B,C) & X(D, F) \\
+    \midrule
+    $\Gamma_1$  & 1 &  1 &  1 \\
+    $\Gamma_1'$ & 1 & -1 &  1 \\
+    $\Gamma_2$  & 2 &  0 & -1 \\
+    \bottomrule
+    \end{tabular}
+    \caption{The character table of $P(3) \cong D_3$:}
+    \label{fig:1}
+\end{figure}
+
+If a representation is \textit{irreducible} we call the 
+character \textit{primitive}. 
+
+\subsection{Orthogonality Relations for Character}
+
+We have the following re characterization of the WOT in terms of 
+character:
+
+\begin{theorem}[Wonderful Orthogonality Theorem for Character]
+    The primitive characters of an irreudcible reprsentation
+    obey the orthogonality relation
+    \begin{equation}
+        \sum_{g \in G}\chi^{(\Gamma_j)}(g)\chi^{(\Gamma_{j'})}(g^{-1})=h\delta_{\Gamma_j,\Gamma_{j'}}
+    \end{equation}
+    or for unitary representations:
+    \begin{equation}
+        \sum_{g \in G}\chi^{(\Gamma_j)}(g)[\chi^{(\Gamma_{j'})}(g)]^*=h\delta_{\Gamma_j,\Gamma_{j'}}
+    \end{equation}
+\end{theorem}
+
+We also have the following theorem that shows equivalence of two
+irreps:
+
+\begin{theorem}
+    Two irreps are equivalent (ie. related by a similarity transform) iff they have the same characters.
+\end{theorem}
+
+Some things to remark:
+\begin{itemize}
+    \item Characters (namely the WOT) can tell us if a representation is irreducible or not.
+    \item We can check if we have \textit{all} irreps through the
+    character table.
+\end{itemize}
+
+\subsection{Reducible Representations}
+
+In general, we get that irreps serve as a ``basis'' of all reprsentations, given by the following theorem:
+
+\begin{theorem}
+    The reduction of representations into irreps is \textit{unique}. Thus, characters are a unique linear combination of
+    irrep characters:
+    \begin{equation}
+        \chi^{\Gamma}(C_k)=\sum_{\Gamma_i}a_i\chi^{(\Gamma_i)}(C_k)
+    \end{equation}
+    In particular we have the coefficients $a_j=S_j/h$ where $$S_j=\sum_{g \in G}\chi^{(\Gamma_j)}(g)\chi^{(\Gamma)}(g)
+    =\sum_{C_k \in \mathcal{C}}N_k[\chi^{(\Gamma_j)}(C_k)]^*\chi(C_k)$$
+\end{theorem}
+
+\begin{corollary} 
+The number of irreps is equal to the number of conjugacy classes.
+\end{corollary}
+
+We also in fact get the following relationship about characters of
+irreps:
+
+\begin{corollary}[Columnwise Orthogonality of Character]
+We have the following orthonormality relationship for character:
+\begin{equation}
+    \sum_{i} \chi^{(\Gamma_i)}(C_k) \left[ \chi^{(\Gamma_i)}(C_{k'}) \right] N_k = h \delta_{kk'}
+\end{equation}
+That is, for fixed irreducible representations, the characters evaluated on different conjugacy classes are orthonormal when weighted by class size.
+\end{corollary}
+
+\subsection{Regular Representations}
+
+We define a particular representation for a group $G$ as follows:  consider the Cayley Table defined by enumerating all the group 
+elements with the  identity element $e$ being at the top left and the rows being enumerated in terms of the inverses of the row
+elements. $\newline$
+
+The \textbf{Regular Representation} is given for an element $g \in G$ by putting a $1$ wherever $g$ appears in the multiplication 
+table. By construction, only the identity will have nonzero
+trace. $\newline$ 
+
+The regular representation essentially ``stacks'' the irreps 
+based on their dimensionality as given by the following:
+
+\begin{theorem}
+    The regular representation contains each irrep a number of times equal to its dimensionality.
+\end{theorem}
+
+From this we get directly the equivalence:
+
+\begin{corollary}
+    The order of a group $h$ and dimensionality $l_j$ of the 
+    irresp $\Gamma_j$ are related by 
+    \begin{equation}
+        \sum l_j^2 = h
+    \end{equation}
+\end{corollary}
+
+\subsection{Finding Irreps of A Group}
+
+In general how do we actually find the irreps of a group?
+\begin{algo}
+    To find the irreps of a group $G$, suppose we have any 
+    given representation $\rho: G \to GL(V)$. Now:
+    \begin{enumerate}[label=(\alph*)]
+        \item Use the vectorized Sylvester's equation to solve $$Q\rho(g)=\rho(g)Q$$
+        More specifically, find a solution space $\{Q_1,\cdots,Q_r\}$ and draw $\alpha \sim U([0,1])$ and
+        let $Q=\sum_{i=1}^{r}\alpha_i Q_i$
+        \item Diagonalize the matrix $Q=S\Lambda S^{-1}$. Now the
+        eignespaces $W_i$ corresponding to the eigenvalues $\lambda_i$ will with probability $1$ will be minimally
+        stable. 
+        \item Each eigenspace $W_i$ gives the projector $P_i=B_iB_i^{\dagger}$. The restriction of $\rho$ onto the
+        eigenspace $\rho_i=B_i\rho B_i^{\dagger}$ will be an irrep.
+    \end{enumerate}
+\end{algo}
+
+Why does this work? By part $1$ of Schur's Lemma, if $Q$ commutes
+with an irreducible $S$, it is constant. If $S$ is reducible, then
+it can be taken to be block-diagonal through a similarity transform
+with irreps on the diagonal, into the form $$\begin{pmatrix} c1\mathbb{I} & \cdots & 0 \\
+& \ddots & \\
+0 & \cdots & c_{m}\mathbb{I} \end{pmatrix}$$
+with the eigenvalues of this being precisely the $c_j$s. Taking
+a random weighted combination will give (in practice) a $Q$ that
+has $c_j$s distinct from which the projection onto the eigenspaces
+are precisely the irreps. 
+
+\subsection{Products of Representations}
+
+There are three main types of group products, split into three cases:
+
+\begin{enumerate}[label=(\alph*)]
+    \item The \textbf{Tensor Product} of two representations of the
+    same group $G$:
+    $$ 
+    D^{(\Gamma_i)}(g)\otimes D^{(\Gamma_j)}(g)=D^{(\Gamma_i \otimes \Gamma_j)}(g) \Leftrightarrow D^{(\Gamma_i)}_{\mu,\nu}(g)D^{(\Gamma_j)}_{\mu',\nu'}=D^{(\Gamma_i \otimes \Gamma_j)}(g)_{\mu\mu',\nu\nu'}$$
+    In general, even if $\Gamma_i$ and $\Gamma_j$ are irreducible,
+    the tensor product is reducible. 
+    \item The \textbf{Direct Product} of two representations of 
+    commuting groups $G_A$ and $G_B$ is given by 
+    $$D^{(\Gamma_i)}(g) \kronk D^{(\Gamma_j)}(h) \quad g \in G_A, 
+    h \in G_B$$
+    This forms a representation of the direct product $G_A \times G_B = \{A_iB_j | A_i \in G_A, B_j \in G_B\}$.
+    \item \textbf{Semi-Direct Product} of representations of two
+    non commuting groups $G_A$ and $G_B$ which gives a group representation of $G_A \ltimes G_B$ (semi direct product of the
+    groups).
+\end{enumerate}
+
+\section{Vibrational Modes (L7-8)}
+
+We use symmetry to study various types of vibrational modes
+of molecules. The \textbf{vibrational modes} are the \textit{internal} movements/displacements of a physical object. 
+Intuitively, these are all representation of displacements of the 
+object mod those that are due to external translations and rotations.
+Vibrational analysis via symmetry is a shortcut to many interesting 
+properties. 
+$\newline$
+
+ By decomposing the displacement space into invariant subspaces corresponding to the irreducible representations (irreps) of the system’s symmetry group, we can predict how these vibrational modes are measurable by specific characterization methods (e.g. \textbf{Infrared Spectroscopy (IR)} or \textbf{Raman spectroscopy}) or split or shift during distortions or symmetry reductions.
+ $\newline$
+
+A \textbf{phonon} is a quantized mode of lattice vibration in a 
+crystalline solid. Translational degrees of freedom correspond to \textbf{acoustic modes} and \textbf{optical modes}, where the former
+refers to in-phase movements and the latter refer to out of phase
+movements.
+
+\subsection{Masses and Springs}
+
+The energy of a system of $N$ masses connected by springs can be
+described by the following Hamiltonian:
+\begin{equation}
+    H(\mathbf{x},\mathbf{m}) = \frac{1}{2}\sum\limits_{i=1} m_i
+    \left(\frac{\partial x_i}{\partial t}\right)^2 + V(\mathbf{x})
+\end{equation}
+The first term is the kinetic energy and the second term is the 
+potential energy. Now, given an equilibrium position $\mathbf{x}_0$,
+the potential energy $V$ can be taylor expanded (with the linear 
+term cancelling due to force equilbrium), leading to a Hamlitonian
+with indices:
+\begin{equation}
+    H(\xi, \mathbf{x}) = \frac{1}{2}\sum_{i}m_i\left(
+    \frac{\partial \xi_i}{\partial t}\right)^2 + \frac{1}{2}
+    \sum_{i,j}\frac{\partial^2V}{\partial\xi_i\partial\xi_j}
+    = \frac{1}{2}\dot\xi^{T}M\dot\xi + \frac{1}{2}\xi^{T}K\xi
+\end{equation}
+where $M$ is the mass matrix and $K=\frac{\partial V}{\partial\xi_i
+\partial\xi_j}$. Taking the derivative with respect to time
+(conservation of energy), we get
+\begin{equation}
+    \dot H = 0 = M\ddot \xi + K \xi
+\end{equation}
+which is precisely the spring oscillator with solution:
+\begin{equation}
+    \xi = ae^{i\omega t} 
+\end{equation}
+which gives the \textbf{secular equation}:
+\begin{equation}
+    (K - \omega^2M)\xi = 0
+\end{equation}
+Intuitively, this implies around equilbrium, the model exhibits 
+certain small vibrations.
+
+\subsection{Finding Vibrational Modes}
+
+Here, $\xi \in \mathbb{R}^{3n}$ and $K-\omega^2M$ is a Hermitian
+matrix. Now, the generalized displacements $\xi$ lie on a vector
+space acted on by $\Gamma^{\text{atomic sites}} \otimes \Gamma^{
+\text{3D vectors}}$. 
+
+We would like to find the \textit{vibrational modes} of this
+space, ie. the the group representation with the external
+translations and rotations quotiented out, ie. 
+\begin{equation}
+    \Gamma^{a.s.} \otimes \Gamma^{vec} - \Gamma^{trans} - \Gamma^{rot} = \Gamma^{vib}
+\end{equation}
+
+This vibrational mode can then be represented as a direct sum of
+irreps showing the ``component parts'' of the general vibrational
+mode. 
+
+\subsection{Spectroscopy}
+
+Molecules can vibrate under infrared light. Under an IR source, we 
+can test the frequencies that are missing in a process called
+\textbf{infrared spectroscopy}. In order for a molecule to be IR
+measurable, we require
+\begin{equation}
+    \Gamma^{final} \otimes \Gamma^{vec} \otimes \Gamma^{initial} 
+    = A_1
+\end{equation}
+
+On the other hand, for \textbf{Raman Spectroscopy}, we must 
+represent as a rank 2 tensor $\Gamma^{l=2}$ instead.
+
+\subsection{Symmetry Breaking Distortions}
+
+Irreps of $G$ can become irreducible under a subgroup $H \subset G$. \textbf{Branching Rules} describe the exact mapping between the
+irreps of $G$ and the irreps of $H$. $\newline$
+
+A simple algorithm to finding all subgroups preserving distortions as follows:
+\begin{enumerate}[label=(\alph*)]
+    \item Find all copies of the desired subgroup in $G$ using 
+    \texttt{vib\_modes.isomorphic\_subgroups}
+    \item For each non-scalar irrep of $G$ see how the subgroup $H$ 
+    transforms when restricted to $H$. This irrep will when restricted to
+    $H$ generally \textbf{branch} into a direct sum of irreps of $H$. 
+    \item Check whether the trivial representation, $A_1^H$ appears in 
+    the restriction. This means there is a subspace invariant under $H$
+    but not neccesarily under $G$.
+    \item Find which vibrational modes of $G$ correspond to these irreps. 
+\end{enumerate}
+These vibrational modes tell us which specific dispalcements preserve $H$. 
+
+Now, normally vibrational modes retain the symmetry of the 
+objects (material or molecules). However, if the displacement $\Gamma$ does not result in $A_1$, this can break symmetry in $G$. There can be many causes such as Temperature, Pressure, External Fields which cause \textbf{phase transitions}. $\newline$
+
+Now, given an equilibrium state, there can be many possible ways
+to fall into nonequilibrium states, which is a phenomenom called
+\textbf{symmetry breaking}.
+
+\section{Lie Algebra (L9-11)}
+
+\textbf{Lie groups} are groups defined smoothly on a set of parameters:
+$g(\alpha)$, ie. it is a differentiable manifold. Some examples include
+the $SO(3)$ (3D rotations) group, $SU(2)$ (complex 2D rotations) group, 
+and the $SL(2,\mathbb{R})$ (real $2 \times 2$ matrices with $\det$ 2) group. $\newline$
+
+
+They have an identity element $\mathbbm{1}$, namely at $\alpha=0$. We can thus taylor expand way from $\alpha=0$: 
+\begin{equation}
+    D(d\alpha) = \mathbbm{1} + (d\alpha_a)X_\alpha + O((d^2\alpha))
+\end{equation}
+where $X_a = \frac{\partial}{\partial \alpha_a}D(\alpha)|_{a=1,\cdots,
+N}$ are the \textbf{generators} of the Lie Group. Here, we use the \textbf{Einstein Summation Notation} and so
+we are actually doing a sum across all $X_a$ (all the generators). These $X_a$ are the matrix ``generators'' of the group. Thus,
+for small $\alpha$, the one step approximation 
+\begin{equation}
+    D(d\alpha) \approx \mathbbm{1} + (d\alpha_a)X_\alpha
+\end{equation}
+holds. Now for $\alpha$ far away from $0$, we can imagine taking $d\alpha \approx \alpha / k$ for some small $k$, and then we get
+the expansion: 
+\begin{equation}
+    D(\alpha) = \lim_{k \to \infty} D(\alpha/k)^k = \lim_{k \to \infty}\left(\mathbbm{1} + \alpha_a\frac{X_a}{k}\right)^k = e^{\alpha_aX_a}
+\end{equation}
+Some notes about matrix exponentials $e^{X} = \sum\limits_{k=0}^{\infty}\frac{X^k}{k!}$. They are always invertible, with inverse $e^{-X}$.
+An important matrix identity for exponential matrices:
+\begin{theorem}[Baker-Campbell-Hausdorff Formula]
+    We have for matrices $X,Y$, 
+    \begin{equation}
+        e^{X}e^{Y} = e^{Z}
+    \end{equation}
+    where 
+    \begin{equation}
+    Z = X + Y + \frac{1}{2}[X,Y] + \frac{1}{12}[X,[X,Y]] 
+    - \frac{1}{12}[Y, [X,Y]]+\cdots
+    \end{equation}
+    and $[X,Y]=XY-YX$ is the 
+    \textbf{commutator} of $X$ and $Y$ (as it measures the
+    degree of how much $X$ and $Y$ commute). 
+\end{theorem}
+
+Some properties about commutators:
+\begin{lemma}
+    The commutator is:
+    \begin{enumerate}
+        \item \textbf{Bilinear}: $[aX+bY,cZ] = [aX, cZ] + [bY, cZ]$
+        \item \textbf{Alternativity}: $[X,X] = 0$
+        \item \textbf{Anticommutativity}: $[X,Y] = -[Y,X]$
+        \item \textbf{Jacobi Identity}: $[X,[Y,Z]] + [Y, [Z,X]] + 
+        [Z, [X,Y]] = 0$
+    \end{enumerate}
+\end{lemma}
+
+This set of generators $\mathrm{g}$ along with the multiplications 
+between the group elements $[\cdot,\cdot]$ define the corresponding
+\textbf{Lie Algebra} for this Lie Group and can be taken into full
+representation form through exponentiation.
+
+\subsection{Deriving Generators for SO(n)}
+
+The \textbf{special orthogonal group} $SO(n)$ is defined to be 
+all orthogonal matrices $R \in \mathbb{R}^n$ with $\det R = 1$.
+As the exponential map (for matrices) is always invertible, set
+$R = e^{A}$ for some matrix $A$. By Baker-Campbell-Hausdorff,
+we thus get $R^{T}=e^{-A}$. $\newline$
+
+Some relevant exponential matrix identities:
+\begin{itemize}
+    \item $(e^{A})^{T} = e^{(A^T)}$
+    \item For orthogonal matrices, we thus get
+    $(e^{A})^{T} = e^{-A} = e^{(A^T)}$ which gives $A^{T}=-A$
+\end{itemize}
+We thus get that the generators $A$ are \textbf{skew-symmetric}.
+Now, the number of ``free parameters'' from this matrix due to the
+skew-symmetric structure is given by $n(n-1)/2$. Each free parameter, or degree of freedom will correspond to a generator, 
+which corresponds to a basis matrix for $A$. $\newline$
+
+In general, one can show that group multiplication is well defined
+for this parameterization iff the generators are closed under
+commutation. 
+
+\subsection{Properties of Exponential Matrices}
+
+We have that similarity transforms in the exponential correspond
+to just similarity transforms in general:
+\begin{equation}
+    e^{\mathcal{U}X\mathcal{U}^{-1}} = 
+    \mathcal{U}e^X\mathcal{U}^{-1}
+\end{equation}
+
+Similarly, we get for direct sums, we get 
+\begin{equation}
+    e^{A \oplus B} = e^{A} \oplus e^{B}
+\end{equation}
+
+Fianlly, for tensor/Kroneker products we get
+\begin{equation}
+    e^{A} \kronk e^{B} = e^{A \kronkplus B}
+\end{equation}
+
+\subsection{Generators for SO(2) and SO(3)}
+
+The standard generators we use for $SO(2)$ are given by $L = \begin{pmatrix}
+    0 & -1 \\
+    1 & 0
+\end{pmatrix}$ and for $SO(3)$ the standard generators are given by
+\begin{equation*}
+    L_x = \begin{pmatrix}
+        0 & 0 & 0 \\
+        0 & 0 & -1 \\
+        0 & 1 & 0 
+    \end{pmatrix},  L_y = \begin{pmatrix}
+        0 & 0 & 1 \\
+        0 & 0 & 0 \\
+        -1 & 0 & 0 
+    \end{pmatrix}, L_z = \begin{pmatrix}
+        0 & -1 & 0 \\
+        1 & 0 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix}
+\end{equation*}
+
+\subsection{Representations of SO(2) and SO(3)}
+
+We have for $SO(2)$ the standard generator $L$ can be brought into
+block-diagonal form by the similarity transform:
+\begin{equation}
+    \begin{pmatrix}
+        i & 0 \\ 0 & -i
+    \end{pmatrix} = \mathcal{U} \begin{pmatrix}
+        0 & 1 \\ -1 & 0 
+    \end{pmatrix} \mathcal{U}^{-1}
+\end{equation}
+where $\mathcal{U} = \begin{pmatrix}
+    1/\sqrt{2} & 1/\sqrt{2} \\
+    i/\sqrt{2} & -i/\sqrt{2}
+\end{pmatrix}$. We thus get that by the properties of direct sums:
+\begin{equation}
+    e^{i \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \alpha}
+= \begin{pmatrix} e^{i\alpha} & 0 \\ 0 & e^{-i\alpha} \end{pmatrix}
+= e^{i\alpha} \oplus e^{-i\alpha}
+\end{equation}
+that is, the representation interms of exponential matrices is 
+reducible and the irreps are \textit{complex}. From this, we can
+rearrive at the common 2D rotation parameterization:
+$$\begin{pmatrix}
+    \cos\alpha & \sin\alpha \\
+    -\sin\alpha & \cos\alpha
+\end{pmatrix}$$
+Similarly, you can get the 3D rotation parameterizations by repeating the same process for $SO(3)$:
+$$
+    R_x =
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & \cos\alpha & -\sin\alpha \\
+0 & \sin\alpha & \cos\alpha
+\end{pmatrix}, \quad
+R_y =
+\begin{pmatrix}
+\cos\alpha & 0 & \sin\alpha \\
+0 & 1 & 0 \\
+-\sin\alpha & 0 & \cos\alpha
+\end{pmatrix}$$
+$$
+R_z =
+\begin{pmatrix}
+\cos\alpha & -\sin\alpha & 0 \\
+\sin\alpha & \cos\alpha & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+$$
+which we call the \textbf{Euler-Angle Representation}. These generators $(L_x,L_y,L_z)$ turn out to be irreducible so in
+fact for $SO(3)$ we have generators for the irreducible 
+representation. 
+
+For Lie Alegbra, however, the more natural 
+representation is in terms of the \textbf{axis-angle 
+representation}, where we rotate about an arbitrary axis 
+$\hat v$ by an angle $\theta$: 
+\begin{equation}
+    e^{\mathbbm{1} \times (\hat v \theta)} \ne e^{\theta(\hat v_x L_x + \hat v_y L_y + \hat v_z L_z)}
+\end{equation}
+which corresponds to the actual ``coefficients'' of the exponential parameterization (unlike $\alpha$ in the Euler 
+Angle). 
+
+\subsection{Irreps of SO(2)}
+
+In 2D, we found the irreps were complex of the form $e^{im\alpha}$ . The tensor products are of the form:
+\begin{equation}
+    e^{im_1\alpha} \kronk e^{im_2\alpha} = e^{i(m_1+m_2)\alpha}
+\end{equation}
+Thus, all $e^{im\alpha}$ for $m \in \mathbb{Z}$ are irreps.
+The intuition is that objects that transform under the irrep
+$e^{im\alpha}$ has $m$-fold symmetry (ie. they repeat every 
+$2\pi/m$ in rotation). 
+
+\subsection{Irreps of SO(3)}
+As described above, $L_x$, $L_y$, and $L_z$ are already irreducible. How do we get the other irreps? We will see that if 
+we have the ``smallest'' (dimensionality-wise) faithful 
+representation of irreps, we can take tensor products and
+decompose. $\newline$
+
+In general, the following algorithm does the trick:
+\begin{algo}[Finding Irreps of Lie Groups]
+Assume $X$ are generators of the smallest faithful irrep of the group. If $X$ and $X^*$ (conjugate) are 
+isomorphic keep only $X$ (eg. $SU(2)$ and $SO(3)$).
+Then, repeat the following:
+    \begin{enumerate}[label=(\alph*)]
+        \item Keep two lists $\rho_{todo}$, ie. irreps
+        to tensor product with $X$ (and $X^*$), and 
+        $\rho_{done}$, irreps already tensor producted
+        w/$X$ (and $X^*$). Add the trivial irrep to
+        $\rho_{todo}$.
+        \item While $|\rho_{todo}|+|\rho_{done}| < n$:
+        \begin{enumerate}[label=\roman*.]
+            \item $\rho=\rho_{todo}.\texttt{pop}(0)$,
+            $\rho_{done}.\texttt{append}(\rho)$ 
+            \item Tensor product $\rho$ with $X$ (and
+            $X^*$)
+            \item Decompose tensor product to irreps.
+            \item Check for isomorphism, and if new
+            append to $\rho_{todo}$
+        \end{enumerate}
+        \item Return $\rho_{todo} + \rho_{done}$
+    \end{enumerate}
+\end{algo}
+\subsection{Angular Momentum and Dirac Notation}
+
+In quantum mechanics, the angular momentum operators
+$\mathbf{L} = (L_x,L_y,L_z)$ are precisely the generators of the Lie Group 
+$SO(3)$, with the $2l+1$ dimensional representations
+being called the $l$-dimensional (or ``spin-$l$'') 
+representations of these operators. $\newline$
+
+Now, one can show that the \textbf{irrep invariant}
+\begin{equation}
+    (L^{(l)})^2 = (L^{(l)}_x)^2 + (L^{(l)}_y)^2
+    + (L^{(l)}_z)^2
+\end{equation}
+commutes with all $L_i^{(l)}$, ie. $[L^{(l)},L_i^{(l)}]
+= 0$. By Schur's Lemma, we thus have that $L^{(l)}$ is
+a constant matrix. For $l=1$, we have $L^{(1)} = 2\textbf{I}$. $\newline$
+
+Now, in general, one can not block-diagonalize all 
+$L^{(l)}_i$ but we can instead choose to diagonalize one
+of the generators, namely $L^{(l)}_z$, and then label
+the angular momentum states based on the eigenvalues of
+$L^{(l)}$ and $L^{(l)}_z$. More specifically, we typically take $\lambda^{(l)} = - l(l+1)$ to be the
+eigenvalue of $L^{(l)}$ and $m$ to be the eigenvalue of
+$L^{(l)}_z$ and label quantum states as kets $|l,m\rangle$.  
+
+\subsection{Ladder Operators}
+
+TODO.
+
+\subsection{Irreps of O(2)}
+
+We now consider the more general \textbf{orthogonal groups}, denoted $O(n)$. $\newline$
+
+We have that for $n=2$, $O(2) = SO(2) \rtimes Z_2$ where
+$Z_2=\{e,i\}$ where $e$ is the identity and $i$ is the
+mirror. These groups, $SO(2)$ and $Z_2$ do not commute
+so we require the use of the semidirect product. For 
+this group, we find that the irreps are the trivial irrep of all $1$s, $1$s for all rotations and $-1$ for 
+all rotoinversions, and $$\begin{pmatrix}
+    \cos(m\alpha) & \sin(m\alpha) \\ 
+    -\sin(m\alpha) & \cos(m\alpha)
+\end{pmatrix}$$
+
+\subsection{Irreps of O(3)}
+
+We have from Dresselhaus, that 
+\begin{equation}
+    O(3) = SO(3) \times Z_2
+\end{equation}
+ie. $Z_2$ commutes with $SO(3)$. For the higher order
+$n$, the irreps are more complicated. As described
+before, we can use ladder operators $L_+$ and $L_-$ to
+move between different quantum states. From these, we
+get that there exists some $m_{max}$ such that 
+$L^+|l,m_{max}\rangle = 0$ so that $-l\le m \le l$.
+$\newline$
+
+\subsection{Clebsch-Gordon Coefficients and 
+Selectino Rules}
+We thus get computing tensor products of generators, eg. 
+$(l=1) \otimes (l=1)$ can be written as a (normalized)
+direct sums of \textbf{paths} of higher irreps where
+the coefficients are called the \textbf{Clebsch-Gordon
+coefficients} and each irrep has $|l_1-l_2| \le l_3 \le l_1 + l_2$. $\newline$
+
+The rules that govern these decompositions
+are called the \textbf{selection rules}: 
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{SO(2)} $m_3 = m_1 + m_2$
+    \item \textbf{O(2)} $m_3 = m_1 \pm m_2$
+    \item \textbf{SO(3)} $|L_1 - L_2| \le L_3 \le
+    L_1 + L_2$
+    \item \textbf{O(3)} $|L_1 - L_2| \le L_3 \le
+    L_1 + L_2$, $p_1p_2 = p_3$
+\end{enumerate}
+
+
+\section{Cartesian Tensors (L12)}
+
+\subsection{Cartesian Tensors}
+\textbf{Cartesian Tensors} are tensors defined in terms
+of an orthonormal coordinate system in Euclidean Space. For example, vectors $\mathbf{e}_i$, matrices $\mathbf{e}_i \otimes \mathbf{e}_j$, tensors $\mathbf{e}_i \otimes \mathbf{e}_j \otimes e_k$ and so on. The number of indices is called the \textbf{order}
+of the tensor. $\newline$
+
+How do you rotate a Cartesian Tensor? We can rotate each
+matrix or flatten the matrix and then rotate. General
+matrices have $9$ degrees of freedom (dof) as $1 \otimes 1 = 0 \oplus 1 \oplus 2$. $\newline$
+
+For many tensors, however, there are less degrees of
+freedoms due to constraints, such as symmetry $\texttt{ij = ji}$ which gives $(1 \otimes 1)_{symm} = 
+0 \oplus 2$. Other examples include the elasticity
+tensor $\texttt{ijkl = klij}$ and the Levi-Cevita 
+tensor \texttt{ijk = jki = kij = -jik = -ikj = -kji}. 
+$\newline$
+
+How do we go from one such general formula to the 
+cartesian tensor decomposition? 
+
+\begin{algo}
+    Given a general symmetry formula for a set of 
+    matrices:
+    \begin{enumerate}[label=(\alph*)]
+        \item Take formula indicating (generators of) index permutation and value sign change (if any) and generate full permutation and sign group with \texttt{grids.formula\_to\_perm\_and\_sign}
+        \texttt{\_group} by extracting signs and
+        permutations represented by formulas, and then
+        running \texttt{groups.generate\_groups} on 
+        signs $\oplus$ perms and then separating back
+        out.
+        \item Take perm group on indices and construct perm group on grid of values (i.e. how index permutations permute tensor entries)
+        \item Given perm group on tensor basis, multiply each element by corresponding sign, sum, and get orthogonal basis (and projector)
+        \item Apply the projector onto the tensor
+        product and see how it decomposes. 
+    \end{enumerate}
+\end{algo}
+
+\subsection{Branching Rules}
+
+Given a cartesian tensor describing a symmetry $H \subset O(3)$, \textit{only} the entries that transform
+as $A_1$ (or $A_{1g}$) will be non-zero. This can dramatically reduce the 
+number of independent parameters in the tensor. For example, a four dimensional
+tensor has $3^4 = 81$ degrees of freedom but with the typically constrains
+of an elasticity tensor this drops to $21$.
+
+\section{Spherical Harmonics, Fourier Transforms (L15-16)}
+
+\subsection{Signals on Spheres}
+
+A \textbf{signal on sphere} is a map $f:S^2 \to \mathbb{R}$.
+It turns out that the irreps of $SO(3)$, $Y^{l}_{m}$ (where
+$-l \le m \le l$ serve as an orthonormal basis for all 
+signals on the sphere. $\newline$
+
+In a similar way, the \textbf{Fourier Transform} is an 
+invertible decomposition of a function into its 
+``frequencies'' and ``amplitudes'' 
+\begin{equation}
+    \hat{f}(x) = \int_{-\infty}^{\infty} f(x) e^{-2i \pi \xi
+    x}dx
+\end{equation}
+while the inverse is 
+\begin{equation}
+    f(x) = \int_{-\infty}^{\infty}\hat f(\xi) e^{-2i \pi \xi x}xd \xi
+\end{equation}
+
+For signals on a sphere, integrals are replaced by tensor
+products of irreps. A \textbf{harmonic function} on a manifold
+is one that satisfies $\nabla^2 f =0 $. Spherical harmonics 
+are the \textit{eigenvalues} of the Laplacian. $\newline$
+
+How many components $k$ do you need to represent a signal on a
+sphere? We have the following theorem:
+
+\begin{theorem}[Nyquist-Shannon]
+    To sample without aliasing we require
+    roughly twice the frequency, $2\pi / \theta_{feature} 
+    = L$ 
+\end{theorem}
+
+This is the notion of \textbf{bandwith} on a sphere, to 
+seperate features on a sphere that differ by some angle.
+
+\subsection{Power Spectra, Bispectra}
+
+Often when dealing with spherical harmonic expansions of signals on a sphere,
+the raw coefficients $a_{lm}$ can be quite complicated. 
+Often, we look at \textit{invariant terms} that are retained
+under symmetry operations that do not change under
+rotations (of $SO(3)$ or $O(3)$). $\newline$
+
+Some examples of this are 
+the \textbf{power spectrum} and \textbf{bispectrum} which 
+correspond to the scalar and pseudoscalar parts of the 
+tensor products of the spherical harmonic coefficients, ie.
+the power spectrum is the scalar part (\texttt{0e}) of 
+$x \otimes x$, the bispectrum is the scalar/pseudoscalar 
+parts of $x \otimes x \otimes x$ and so on. These quantities 
+are invariant under symmetry operations 
+
+\section{Group Convolutions, Spherical CNNs (L17-18)}
+
+\subsection{Spherical CNNs}
+
+For images, we often consider cross-correlation (referred
+to as convolution in the ML literature) of a planar 
+signal $f: \mathbb{R}^2 \to \mathbb{R}$ (an image) with
+some filter $\psi: \mathbb{R}^2 \to \mathbb{R}$:
+\begin{equation}
+    [f \star \psi](x) = \int_{y}f(y)
+    \psi(x-y)
+\end{equation}
+We now consider functions on the sphere $f: S^2 \to \mathbb{R}$ which are commonly used in many applications 
+such as omnidirectional vision. To do this, we must extend the idea of
+a convolution between functions on the plane to functions on a group $G$:
+\begin{equation}
+    [f \star \psi] (g) = \langle f, L_g \psi  \rangle = \sum_{h \in G} f(h)\psi(g^{-1}h)
+    \label{eq: 33}
+\end{equation}
+
+\subsection{Group Convolutions in Real Space}
+
+One way to paramterize Equation \ref{eq: 33} is through the regular
+representation. Since by the rearrangement theorem, we have $g^{-1}G = G$
+for any $g \in G$, we can write:
+\begin{align}
+    [f \star \psi] (g) &= \langle f, L_g \psi  \rangle = \sum_{h \in G} f(h)\psi(g^{-1}h) \\ &= \sum_{h \in G} \sum_{j \in G}f(h)\psi(j)
+    \mathbbm{1}[g^{-1}h = j] \\
+    &= \sum_{h \in G}\sum_{j \in G}f(h)\psi(j)D^{reg}(g^{-1})_{j,h} \\
+    &= \sum_{h \in G}\sum_{j \in G}f(h)\psi(j)D^{reg}(g)_{h,j}
+\end{align}
+
+That is to say, the regular representation $D^{reg}(g)$ is our change
+of basis from $f \otimes g$ tensor product rep to the regular 
+representation vector space. In practical terms, for an input $f$
+of size [\texttt{batch, c\_in, reg\_rep], `zci'}, filter $\psi$ of size
+[\texttt{c\_out, c\_in, reg\_rep], `dcj'}/, and the regular representation 
+$D(g)$ with size [\texttt{reg\_rep, reg\_rep, reg\_rep], `kij'} we get an output \texttt{`zdk'}. 
+
+\subsection{Group Convolutions in Fourier Space}
+Now, doing this convolution in real space is rather inefficient. One
+can instead speed this up by doing a Discrete Fourier Transform 
+using a generalized version of the Convolution Theorem which we 
+recall states that for two signals $f,\psi:\mathbb{Z}^2 \to \mathbb{R}$
+that 
+\begin{equation}
+    \widehat{f \star \psi} = \hat f \odot \hat \psi 
+\end{equation}
+where $\hat f: \mathbb{Z}^2 \to \mathbb{C}$ refers to the Fourier transform of $f$. In a similar 
+vein, recall how we defined the general fourier transform of rotations on a sphere to be the set of coefficients onto the Wigner-D basis $\{D^{l}_{m,n}(g)\}$. The spherical harmonics satisfy a generalized Fourier
+Theorem:
+\begin{equation}
+    \widehat{\psi \star f} = \hat f \hat \psi^{\dagger}
+\end{equation}
+Thus, to get the convolution for any given $g \in G$, we can simply
+first take the Fourier Transform of $f$ and $\psi^{\dagger}$ onto the
+Wigner-D matrix basis $D^{l}_{mn}(R)$ to get a set of coefficients 
+$\hat{f}$ and $\hat{\psi}^{\dagger}$ and then matrix multiplying to get the Fourier Transform of $\psi \star f$. To get the final convolution 
+\begin{equation}
+    \psi \star f = \hat{f}\hat{\psi}
+    D(g)
+\end{equation}
+
+\subsection{Group Convolutions in Practice}
+
+In practice, how do you get group equivariant deep networks? In practice,
+you simply rotate the filter and then convolve around the input and then
+stack the resulting outputs in what we call a \textbf{lifting convolution}. This is done by using the permutation representation above.
+
+\section{Steerable Convolution (L19)}
+
+We can imagine that the approach in real space where we make a filter 
+bank of possible roto-translations of the kernel and then applying them
+to our input in real space is extremely inefficient. For general Lie
+groups, it also requires discretizations which can become inaccurate.
+To go to more general groups such as Lie Groups ($SO(3)$) we require 
+more machinery.
+As explained above, by sticking in Fourier space and building up from 
+basis functions in Fourier space can allow us to generalize. $\newline$
+
+This motivates \textbf{steerable filters} as follows: 
+a \textit{steerable basis} for a group $G$ is a set of 
+basis functions $\{B_i\}$ such that for any $g \in G$
+and any group element transformed by $g$, the function
+also transforms as $g$, ie.
+\begin{equation}
+    B_b(D^{vec}(g)x) = D^{filt}(g)B_b(x) 
+\end{equation}
+\newline
+Suppose you have a set of points $\{x_i\}$ that transform under a rotation $g \in G$ as $D^{\rho_{vec}}(g)x_i$ and features $\{f_i\}$ that 
+transform as $D^{\rho_{in}}(g)f_i$. Next, consider a filter $\psi: \mathbb{R}^2
+\to W$ that takes relative vectors $x_{ij} = x_i - x_j$. Now, define a convolution operators on these features to get 
+$f \star \psi: $
+\begin{equation}
+    (f \star \psi)(x_a) = \sum_{ b \in \mathcal{N}(a)} f_b \otimes \psi(x_{ab})
+\end{equation}
+We would like to have the property that:
+\begin{equation}
+    D^{\rho_{in}}(g)f_j \otimes \psi(D^{vec}(g)x_{ij}) = 
+    D^{\rho_{in} \otimes \rho_{filter}}(g)[f_j \otimes \psi(x_{ij})]
+\end{equation}
+Now suppose our filter $\psi$ is built from steerable
+basis functions $\{B_i\}$ so
+\begin{equation}
+    \psi(x_{ab}) = \sum\limits_{i}c_iB_i(x_{ab})
+\end{equation}
+We thus get
+\begin{equation}
+    \psi(D^{\rho_{vec}}(g)x_{ab}) = \sum\limits_{i}c_iB_i(D^{\rho_{vec}}(g)x_{ab}) = cD^{filt}(g)B(x_{ab})
+\end{equation}
+where $c = \text{diag}(c_1,\cdots,c_{j})$. By Schur's
+Lemma, for $c$ to commute with $D^{filt}(g)$ we need
+$c$ to be constant with respect to each irrep of 
+$D^{filt}(g)$. This would then give:
+\begin{align}
+    \psi(D^{\rho_{vec}}(g)x_{ab}) &= cD^{\rho_{filter}}(g)B(x_{ab}) \\
+    &= D^{\rho_{filter}}(g)cB(x_{ab}) = D^{\rho_{filter}}(g)
+    \psi(x_{ab})
+\end{align}
+which gives 
+\begin{equation}
+    D^{\rho_{in}}(g)f \otimes \psi(D^{\rho_{filt}}(g)x_{ij})
+    = D^{\rho_{in} \otimes \rho_{filt}}(g)[f \otimes \psi(x)]
+\end{equation}
+
+Thus, any steerable group convolution is block-diagonal/constant on each
+irrep. 
+\end{multicols}
+\end{document}

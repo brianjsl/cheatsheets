@@ -1,0 +1,2243 @@
+\documentclass[9pt]{article}
+\usepackage{cheatsheet}
+
+\begin{document}
+\raggedright
+% \small
+\begin{multicols}{2}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{\underline{14.15 Final Exam Cheat Sheet}} \\
+\end{center}
+% You can even have references
+% \rule{0.3\linewidth}{0.25pt}
+% \scriptsize
+% \bibliographystyle{abstract}
+% \bibliography{refFile}
+
+\section{Definitions, Graphs (L1-L2)}
+
+There are at most $\dbinom{n}{2}$ connections in a graph with $n$ nodes and thus $2^{\dbinom{n}{2}}$ possible graphs. 
+
+\textbf{Degree of seperation} of a graph $\mathcal{G}$ with $n$ nodes denoted $d$, is defined
+\begin{equation}d = \frac{\ln n}{\ln \lambda}
+\end{equation}where $\lambda=\max_{g \in \mathcal{G}} |\mathcal{N}(\mathcal{G})|$.
+
+\textbf{Branching Tree Approximation}: Assumption that neighbors 
+aren't neighbors with each other (Imagines graph is a tree with no
+cycles)
+
+\textbf{Strength of Weak Ties}: Idea that weak ties allow distant
+clusters of people to meet. Formalized through the \textbf{Strong-tie Tiadic
+Closure}: $$(i,j), (j,k) \in E' \implies (i,k) \in E$$ where $E'$ are the 
+strong ties and $E$ is the weak ties. 
+
+\subsection{Graph Theory Terminology} 
+
+A network/graph can also be represented by an \textbf{adjacency matrix}
+$\mathbf{G}$ where $g_{ij} \in \{0,1\}$ represents linkage. 
+
+\textbf{Adjacency Matrices}
+
+From the adjacency matrix $\mathbf{G}$ we have that $\mathbf{G}^k_{ij}$ is the
+number of walks of length $k$ between $i$ and $j$ (while for weighted graphs
+this is the sum of the values of all length $k$ paths).
+
+An undirected graph is \textbf{connected} if there is a path between all nodes. A \textbf{component} is a maximally connected subgraph of a graph. A graph can there be \textbf{partitioned} into
+its components, with the adjacency matrix (upon reordering) being
+written in block diagonal form.
+
+\subsubsection{Directed Graphs}
+For directed graphs, the graph is \textbf{strongly connected} if each node can reach any other through a \textit{directed} path.
+
+For a set $S \subset N$ the set of nodes $T$ that can be reached from $S$ are
+called the \textbf{out-component} of $S$ while the set of nodes that can reach
+$S$ are called the \textbf{in-component}. The strongly connected component of
+a node $i$ is the intersction of the in and out component of $i$.
+
+\section{Summary Statistics (L1-L2)}
+
+Harder to analyze larger networks visually so we keep summary statistics, mainly:
+
+a) Degree distribution/Density (eg. Poisson)
+
+b) Diameter, Average Path length
+
+c) Clustering 
+
+d) Centrality  (importance of nodes)
+
+e) Homophily (How are nodes of the same ``type'' linked)
+
+\subsection{Mean Degree, Density, Sparseness}
+
+The \textbf{mean degree} of a graph is the mean of the degrees of
+each node $d = \frac{1}{n}\sum_{i}d_i=\frac{2m}{n}$ (where $m=|\mathcal{E}|$). 
+
+The \textbf{density}, $\rho$ is the fraction of all links that
+exist, ie. $$\rho=\frac{m}{\dbinom{n}{2}}=\frac{\bar d}{n-1} \approx \frac{\bar d}{n}$$
+
+A network is \textbf{sparse} if $\rho$ is small, ie. $\lim_{n \to \infty} \rho_n = 0$. 
+
+\subsection{Degree Distribution}
+
+The \textbf{degree distribution} is the distribution $p(\cdot)$ 
+representing the fraction of nodes with degree $d$ (or equivalently
+in Erdos-Renyi random graphs the distribution).
+
+A graph is \textbf{d-regular} if all nodes have the same distribution $d=\frac{2m}{n}$ (so $p(\cdot)$ is the Dirac delta).
+
+Many types of probability distributions:
+
+\textbf{Thin-Tailed}: $p(d) \le ce^{-\alpha d}$ for $\alpha, c > 0$. Tails fall off fast, so large degrees are unlikely.
+
+\textbf{Fat-Tailed}: $p(d)=cd^{-\gamma}$ for constants $c,\gamma > 0$ (called a \textbf{power-law distribution}). Tails are \textit{fat} so large degrees more likely than thin-tailed.
+
+\subsection{Diameter and Average Path Length}
+
+Average path length is given by $\sum_{i \ne j} l_{ij}/n(n-1)$. 
+
+The \textbf{diameter} is $d=\max_{(i,j)} d_{ij}$
+
+We measure \textit{clustering} in a graph $\mathcal{G}$ by the \textbf{overall clustering coefficient} (or \textbf{network transitivity})
+\begin{equation}
+\text{Cl}(\mathcal{G})=\frac{\sum_{i \ne j \ne k} g_{ij}g_{ik}g_{jk}}{\sum_{i \ne j \ne k} g_{ij}g_{ik}}
+\end{equation}
+
+The \textbf{individual cluster coefficient} of node $i$ is given by
+\begin{equation}
+\text{Cl}_i(\mathcal{G})=\frac{\sum_{i \ne j \ne k} g_{ij}g_{ik}g_{jk}}{\sum_{i \ne j \ne k} g_{ij}g_{ik}}
+\end{equation}
+where now the sum is over just $j$ and $k$ (abuse of notation).
+
+The \textbf{average clustering coefficient} is given by 
+\begin{equation}
+\text{Cl}^{avg}(\mathcal{G})=\frac{1}{n}\sum_{i}{\text{Cl}_i(\mathcal{G})}
+\end{equation}
+
+\subsection{Centrality/Closness}
+
+The \textbf{degree centrality} is simply $d/(n-1)$.
+
+The \textbf{betweeness centrality} of a node $k$ is given by
+\begin{equation}
+B_k = \sum_{(i,j) i \ne j, k \ne i,j} \frac{P_{k}(i,j)/P(i,j)}{\dbinom{n-1}{2}}
+\end{equation}
+
+Closeness can be measured by either inverse average distance $(n-1)/\sum_{j \ne i}l_{ij}$ or \textbf{decay centrality}: $\sum_{j \ne i} \delta^{l_{ij}}$
+
+Measures of centrality of nodes based on eigenvectors are called
+\textbf{eigenvector-based centrality}.
+
+\subsection{Homophily and Segregation}
+
+\textbf{Homophily} (or \textbf{Associative Matching}): extent to 
+which nodes of same type are likely to be connected. Simple measure:
+fraction of links between individuals of di§erent types relative to
+uniform.
+
+\section{Eigenvector-based Centrality (L3)}
+
+\subsection{Vanilla Eigenvector Centrality}
+We define the \textbf{eigenvector centrality} $\mathbf{c}=(c_i)$ of a graph $G$ (written with adjacency matrix $\mathbf{g}$) to be a nonzero vector 
+such that $\exists \lambda > 0$ such that
+\begin{equation}
+\lambda c_i = \sum_{j \ne i}g_{ji}c_j \quad \forall{i} \in N 
+\Leftrightarrow \lambda\mathbf{c}=\mathbf{g}^{T}\mathbf{c}
+\end{equation}
+(Note: $g_{ji}$ is the links that \textit{come to you}). Usually,
+we normalize by $\sum{c_i}=1$.
+
+A (directed) network is said to be \textbf{strongly connected} if there is a directed path between any two nodes. That is, $\exists l > 0$ such that $(g^{l}_{ij}) > 0$. The corresponding adjacency matrix is then said to be \textbf{irreducible}. 
+
+\begin{theorem}[Perron-Frobenius]
+    For any irreducible non-negative matrix $\mathbf{g}$ , its largest 
+    eigenvalue $\lambda_1$ is a positive real number, the components of the 
+    corresponding eigenvector $v_1$ are also all positive, and $v_1$ is the 
+    only non-negative eigenvector.
+\end{theorem}
+
+Rate of convergence dictated by how fast $(\lambda_2/\lambda_1)^t \to 0$ as $t \to \infty$.
+
+\subsection{Katz-Bonacich Centrality and Leonteif Inverses}
+
+Unfortunately, if graph is not strongly connected, many nodes will have eigenvector centrality $0$. This is partially resolved with the following fix:
+Given $\beta > 0$, the vector of \textbf{Katz-Bonacich Centralities with parameter} $1/\lambda$ is defined as the
+non-negative vector $\mathbf{c}$ such that 
+\begin{equation}
+c_i=\frac{1}{\lambda}\sum_{j \ne i}g_{ji}c_j + \beta \quad \forall{i} \in N \Leftrightarrow \mathbf{c}=\frac{1}{\lambda}\mathbf{g}^{T}\mathbf{c}+\beta\mathbf{1}
+\end{equation}
+The resulting solution is 
+\begin{equation}
+\mathbf{c}=\beta\left(\mathbf{I}-\frac{1}{\lambda}\mathbf{g}^{T}\right)^{-1}\mathbf{1}=\beta\left(\mathbf{I}-\alpha\mathbf{g}^{T}\right)^{-1}\mathbf{1} = \beta\Lambda^T \mathbf{1}
+\end{equation}
+where often we write $\alpha:=1/\lambda$ which we call the \textbf{decay parameter}. This is well defined iff $\alpha < 1/\lambda_1$.
+
+We define the \textbf{Leonteif inverse of } $\mathbf{g}$ \textbf{with parameter } $\alpha$ to be $$\Lambda = (\mathbf{I}-\alpha\mathbf{g})^{-1}$$
+This implies the Katz-Bonacich centralities with $\beta=1$ is simply $\Lambda\mathbf{1}$ where $\Lambda$ is the Leontief inverse of $\mathbf{g}^{T}$. Intuitively, we have 
+$$\Lambda= \mathbf{I}+\alpha\mathbf{g}+\alpha^2\mathbf{g}^2+\cdots$$ which 
+is the sum of the value of all length $l$ weights discounted by $\alpha^l$.
+
+\subsection{PageRank}
+Problem with Katz-Bonacich: weighs too highly the \textit{incoming} influence from other pages (eg. Amazon sellers would be ranked too high!).
+
+\textbf{Pagerank} modifies Katz-Bonacich by normalizing by out-degrees of each incoming node:
+\begin{equation}
+c_i=\alpha\sum_{j \ne i}\frac{g_{ji}}{d_{j}^{out}}c_j+1\Leftrightarrow \mathbf{c}=\alpha\mathbf{g}^{T}D^{-1}c+\mathbf{1}
+\end{equation}
+where $D$ is the diagonal matrix with entries $D_{ii}=\max\{d_i^{out},1\}$ which gives:
+\begin{equation}
+\mathbf{c}=\left(\mathbf{I}-\alpha\mathbf{g}^{T}D^{-1}\right)^{-1}\mathbf{1}
+\end{equation}
+
+This is usually normalized as $\hat{\mathbf{c}} = \frac{1-\alpha}{n}\mathbf{c}$.
+
+\textbf{Intuitive interpretation of Pagerank}: fraction of periods at which
+web surfer who randomly moves to a neighbor with probability $\alpha$ and jumps with probability $1-\alpha$.
+
+\textbf{Iterative algorithm for Pagerank}: \\
+1. Initialize $c_i(0)=1/n$ for all $i$. \\
+2. Compute 
+\begin{equation}
+c_{i}(t+1)=\frac{1-\alpha}{n}+\alpha\sum_{j \ne i}\frac{g_{ji}}{d_{j}^{out}}c_{j}(t)
+\end{equation}
+
+\subsection{Katz's First Measure}
+
+Dividing by out-degree but without ``free parameter'' $\beta$, we get \textbf{Katz's First Measure}: $$\mathbf{c}=\mathbf{g}^{T}D^{-1}\mathbf{c}$$
+
+\section{Production Networks (L4)}
+
+Before: Robert Lucas (1977) argues that idiosyncratic shock effects
+dissipate due to law of large numbers. This, however, ignores
+\textit{network} structure.
+
+\subsection{Leonteif Approach to Fluctuations}
+To study transmission structure: model production economy with 
+$n$ sectors in a \textbf{production network}. 
+
+The economy is described by a set of weights $W$ and an efficiency
+parameter $\alpha < 1$. Sector $i$ requires $\alpha w_{ij}$ units
+of every good $j$ to produce one unit of $i$. The production of 
+$x_i$ is given by 
+\begin{equation}
+x_i = \frac{1}{\alpha}\min\left\{\frac{x_{i1}}{w_{i1}}, \cdots,\frac{x_{in}}{w_{in}}\right\}
+\end{equation}
+This assumption that inputs are required in fixed quantities is 
+called the \textbf{Leonteif production technology}.
+
+To model the consumer demand, suppose the production levels of each
+sector $i$ is given by $\mathbf{x}=[x_1,\cdots,x_n]^{T}$ and 
+the consumer demand is given by $\mathbf{y}=[y_1,\cdots,y_n]^{T}$. 
+We have the remaining (not used for other industries) supply of 
+produce is given by
+\begin{equation}
+    \mathbf{y}=\mathbf{x}-\alpha W^{T}\mathbf{x}=(\mathbf{I}-\alpha{W}^{T})\mathbf{x}
+\end{equation}
+For invertible $\mathbf{I}-\alpha W$ (ie. $\alpha < 1/\lambda_1$) the solution
+is given by the Leonteif inverse: 
+\begin{equation}
+    \mathbf{x} = \Lambda \mathbf{y}
+\end{equation}
+
+Equal to Katz-Bonacich centrality when demand is $\mathbf{1}$! 
+Thus, goods with high \textit{in-centrality} produce a lot. Higher
+$\alpha \implies $ more demand, sum converges slower.
+
+The Leontiff inverse (written as a geometric sequence) gives us
+the intuition: the effect of a demand shock on sector $i$ on the
+production of sector $j$ is the sum of the value of all walks 
+(where each edge is discounted suitably) with the net
+effect on the total production 
+$$\Delta\text{GDP} = \sum_{j}{\Delta x_j} = \mathbf{1}^{T}(\mathbf{I}-\alpha W^{T})^{-1}\mathbf{e}_i=(\Lambda \mathbf{1})^{T}\mathbf{e}_i$$
+That is, the impact of sector $i$ on GDP is equal precisely to $i$'s
+Katz-Bonacich centrality in $W$.
+
+Ideas: demand shocks with high ``out-centrality'' have biggest effect on GDP as shocks travel ``upstream'' and doesn't depend on
+where we start in terms of demand (initial $\mathbf{y}$).
+
+\subsection{Conclusions from Leonteif Input/Output Model}
+
+Some conclusions to draw:
+\begin{itemize}
+    \item Most influential demand shocks are from those firms that
+    supply many others as demand shocks travel ``upstream''.
+    \item Supply shocks (ie. changes in $\mathbf{x}$) travel ``downstream''. 
+    \item Aggregate volatility from idiosyncratic shock effects 
+    does not neccesarily dissipate as $1/\sqrt{n}$, depending on
+    network structure.
+\end{itemize}
+
+Moral of the story: indirect linkages are also important. 
+
+\section{Degroot Learning Model (L5-L6)}
+
+\subsection{Degroot Learning as a Model of Social Learning}
+\textbf{Degroot Learning Model}: Rule of thumb social learning model of how people in network update their opinions over time and reach consensus. 
+\begin{enumerate}[label=(\alph*)]
+    \item Given a finite set of nodes $N$ and discrete timesteps 
+    $t=1,2,\cdots$
+    \item Nonnegative \textbf{Updating matrix} $W$, that is
+    \textbf{row-stochastic}, ie. $\sum_{j=1}^{n}W_{ij}=1, \quad \forall i \in \{1,\cdots,n\}$ 
+    \item Each agent has \textbf{initial belief} $x_i(0) \in [0,1]$
+    \item \textbf{Degroot Update/Averaging Procedure}:
+    \begin{equation}
+            x_{i}(t+1)=\sum_{j=1}^{n}W_{ij}x_j(t)
+    \end{equation}
+    or in matrix form, where $x(t)=[x_1(t),\cdots,x_{n}(t)]^{T}$
+    \begin{equation}
+        x(t)=Wx(t-1)
+    \end{equation}
+    That is, the beliefs are updated according to a Markov Chain with transition matrix $W$. 
+\end{enumerate}
+We say a matrix is \textbf{aperiodic} if the gcd of all directed
+cycles is $1$. A sufficient condition is that of \textbf{self-loops}, ie. $\exists i$ such that $W_{ii} > 0$. $\newline$
+
+Recall all \textbf{ergodic} Markov Chains converge to a stationary distribution. For finite directed graphs, we have all \textit{strongly connected}, \textit{aperiodic} markov chains are ergodic, and will thus converge to a stationary distribution.
+\begin{lemma}
+    For a strongly connected network, convergence implies consensus.
+\end{lemma}
+
+The \textbf{consensus} vector is thus defined $\lim_{t \to \infty} W^{t}x(0)$. These ideas are summarized by the following theorem:
+\begin{theorem}
+    If the directed network $W$is strongly connected and aperiodic, then $\lim_{t \to \infty} W^{t}=W^*$ exists. Moreover, the rows
+    of the matrix $W^*$ are all the same: ie. $$(W^*x)_{i}=(W^*x)_j
+    \forall x \in \mathbb{R}^n, \quad \forall i,j \in [n]$$
+\end{theorem}
+
+A matrix $W$ is said to be \textbf{primitive} if $\exists l > 0$ st $W^l$ has
+all positive entries. It can be shown $W$ is primitive iff it is strongly connected and aperiodic. $\newline$
+
+We have the \textbf{long run influence} $s_i$ of the agent $i$ is the $i$th element of any of the rows of $W^*$. Formally, we call
+the vector $\mathbf{s}=[s_1,\cdots,s_{n}]^{T}$ a \textbf{long-run
+influence vector} if $\sum s_i=1$ and $$x_1^*=\mathbf{s}^{T}x(0)$$
+where $x_1^*$ is the consensus. $\newline$
+
+Due to convergence, we get the following:
+\begin{theorem}[Long Run Influences are Right Eigenvectors]
+    We have if $\mathbf{s}$ is the long-run influence vector, 
+    $$\mathbf{s}^{T}W=\mathbf{s}^{T} \Leftrightarrow W^{T}\mathbf{s}=\mathbf{s}$$
+    That is, an agent's long run influence is precisely her 
+    eigenvector centrality.
+\end{theorem}
+
+We can thus simply calculate the long run influence and beliefs
+by calculating the right eigenvectors of $W$ and then calculating
+$\mathbf{s}^{T}x(0)$
+
+\subsection{Wisdom of the Crowd}
+\textit{Main idea}: each initial estimate $x_i(0)$ is an iid, unbiased estimate of some true state of the world $\theta$. $\newline$
+
+Suppose we have a growing network of size $n$. The long-run consensus is then $\mathbf{s}^{T}(n)\mathbf{x}(0)$. By law of large numbers, this sum converges
+in probability to $\theta$ as $n \to \infty$ iff 
+$$\lim_{n \to \infty}\max_{i \le n}s_i(n)=0$$ Thus, a large network
+is wise iff each node's long run influence is small.
+
+\subsection{Equal Long-Run Influence}
+
+A nonnegative matrix $W$ is called \textbf{doubly-stochastic} if both all rows \textit{and columns} sum to $1$.
+
+\begin{theorem}
+    In Degroot Learning, everyone has equal long-run influence (ie.
+    each $s_i=1/n)$ iff the matrix $W$ is doubly-stochastic.
+\end{theorem}
+
+\subsection{Generalizations of Degroot}
+
+Some generalizations of Degroot Learning: $\newline$
+
+\textbf{Time-varying weight on Belief} (DeMarzo, 2000): If agents realize they are learning over time, they can put more weight on own belief more:
+\begin{equation}
+    x_i(t)=(1-\lambda_t)x_i(t-1)+\lambda_t\sum_{j=1}^n W_{ij}x_j(t-1)
+\end{equation}
+where $\lambda_t$ decreases over time. Still converges if $\sum \lambda_t \to \infty$. $\newline$
+
+\textbf{Ignoring People with Distant Beliefs} (Krause, 2000): Update
+based only on neighbors with ``similar'' opinions:
+\begin{equation}
+    x_{i}(t)=
+\frac{\sum_{j \in N_i : |x_i(t-1) - x_j(t-1)| < d} x_j(t-1)}
+{\left| \{ j \in N_i : |x_i(t-1) - x_j(t-1)| < d \} \right|}
+\end{equation}
+
+\textbf{No Initial Opinions} (Banerjee, 2021): Only subset $S \subset N$ starts with beliefs and use Voronoi sets to generalize.
+
+\subsection{Aggregation vs. Diffusion}
+
+Degroot learning is an example of \textbf{aggregation}: everyone
+starts with opinions and we study how they combine or get \textit{aggregated}. In \textbf{diffusion} models of learning
+only a few people start with information and we ask how this spreads.
+
+\section{Static Random Graphs (L6-7)}
+
+For larger networks, it is usually not tractable to analyze the
+particular structure of individual networks. It can instead, be 
+more useful to understand the statistical properties of how these
+networks are formed. $\newline$
+
+In L6-L7 we study \textbf{static networks} where all the network
+nodes are formed ``at once''. In L8 we study \textbf{dynamic networks} where nodes are formed ``over time''.
+
+\subsection{The Erdos-Renyi Model}
+
+\textbf{Erdos-Renyi Random Graph}: Either link formages as:
+\begin{enumerate}[label=(\alph*)]
+    \item Fixed number of links $m$ and they are chosen randomly, \textit{or}
+    \item (Gilbert) Each link forms independently with some probability $p \in (0,1)$ 
+\end{enumerate}
+We focus on the second case. 
+ Based
+on $p$, we will often get very different properties of the graphs.
+
+\subsection{Node Degrees}
+
+We have since the links form independently, the expected number of
+links $$\mathbb{E}[\# \text{ of links}]=\frac{n(n-1)}{2}p$$ and by
+the Weak Law of Large numbers, it concentrates around the mean. 
+$\newline$
+
+Each node has \textbf{mean degree} $\lambda = (n-1)p \approx np$
+and so the \textbf{density} is simply $\lambda/(n-1)=p$. $\newline$
+
+An ER graph is called \textbf{sparse} if the link probability 
+$p \to 0$ as $n \to \infty$. $\newline$
+
+The degree distribution of each node follows a binomial distribution:
+\begin{equation}
+    p(D=d)=\dbinom{n-1}{d}p^d(1-p)^{n-1-d}
+\end{equation}
+For fixed $\lambda$ (as $n \to \infty$), ie. 
+also get that the degree distribution of each
+node is approximated roughly by the \textbf{Poisson Distribution}:
+\begin{equation}
+p(d) \approx \frac{e^{-\lambda}\lambda^d}{d!}
+\end{equation}
+so the ER model is often also called the \textbf{Poisson Random
+Graph Model}. As the degree distribution falls off exponentially,
+the ER model generates a \textbf{thin-tailed} degree distribution
+(so almost all nodes will have similar degrees, with roughly no
+``hubs''). $\newline$
+The probability a node is isolated is then simply $$\mathbb{P}(D=0)=e^{-\lambda}$$
+\textbf{Friendship Paradox}: for large $n$, your friend will 
+have degree approximately $\lambda+1$.
+
+\subsection{Clustering}
+
+The probability that potential triangle becomes triangle is $p$ so 
+for sparse graph, expected clustering $\to 0$ as $n \to \infty$ so both 
+overall and individual clustering $\to 0$. 
+
+\subsection{Diameter/Average Path Length}
+We use the branching tree approximation (friends of friends aren't my friends). In a component of size $k$, the average path length
+and diameter are both $d=\frac{\log k}{\log \lambda}$. This is rather small and so the phenomenom is called \textbf{small worlds}.
+
+\subsection{Threshold Functions}
+
+For any property $A$, we say the function $t(n)$ is a \textbf{threshold function} if $$P(A) \to 0 \quad \text{if} \quad
+\lim_{n \to \infty}\frac{p(n)}{t(n)}=0$$ and 
+$$P(A) \to 1 \quad \text{if} \quad
+\lim_{n \to \infty}\frac{p(n)}{t(n)}=\infty$$
+A property is \textbf{monotone} if $(N,E)$ satisfies it, then so does
+any $(N,E')$ where $E' \subset E$. If a threshold function exists,
+we say that a \textbf{phase transition} occurs at the threshold.
+$\newline$ 
+
+Some examples:
+\begin{enumerate}[label=(\alph*)]
+    \item $t(n)=1/n^2$ is a phase transition for the property
+that the graph has an edge
+\item More generally, a threshold function
+for the emergence of a $k$-node tree is $1/n^{k/(k-1)}$.
+\item Threshold function for emergence of a cycle of length $k$
+is $t(n)=1/n$ (for \textit{any} $k$!)
+\item A \textbf{giant component} is a component that contains a
+positive fraction of all nodes in the network.
+\end{enumerate}
+
+\subsection{Component Structure}
+
+Depending on the growth of $p(n)$ we get different component structure:
+\begin{enumerate}[label=(\alph*)]
+    \item For $p(n) << 1/n$, all components will be small $O(\log(n))$
+    \item For $p(n) >> 1/n$, a giant component (size $O(n)$) will
+    emerge. That is, $t(n)=1/n$ is a threshold for a giant component.
+    \item (\textbf{Erdos-Renyi Theorem}) As $p(n)$ increases further, the 
+    component will increase in size until $p(n) \approx \log n / n$
+    at which point the graph is connected. That is, $t(n)=\log n/n$
+    is a threshold for connectivity.
+\end{enumerate}
+
+\subsection{Giant Components}
+
+As discussed before, the threshold for a giant component is given
+by $t(n)=1/n$.
+
+For $p(n) >> 1/n$ what is the size of the giant component? For 
+fixed $\lambda$, as $n \to \infty$, we have the fraction of points
+in the giant component $q$ satisfies:
+\begin{equation}
+    q \approx 1-e^{-\lambda q} \Leftrightarrow \lambda = -\frac{\log(1-q)}{q}
+\end{equation}
+This gives us that:
+\begin{enumerate}
+    \item $q=0$ until $\lambda=1$
+    \item $q$ increases as a concave function of $\lambda$
+    \item $q \to 1$ as $\lambda \to \infty$
+\end{enumerate}. 
+\subsection{Configuration Models}
+
+The Erdos Renyi leads to a degree distribution following $\approx$
+the Poisson Distribution (which has thin tails). This is not always realistic
+so we make some adjustements: $\newline$
+
+\textbf{Configuration Model}: specify the desired degree distribution in 
+advance, then generate a random network with approximately this degree 
+distribution. More specifically, start with a \textbf{degree sequence}
+$(d_1,\cdots,d_n)$ which specifies the desired degree for each node $i \in N$
+(with $\sum d_i$ even).
+Then, enumerate a list consisting of each node $i$ $d_i$ times. Then, randomly
+pick two elements and form a ``link'' between them and delete those entries.
+
+\subsection{Degree and Excess Degree Distribution}
+
+As in ER, the clustering $\mathbb{E}[d]/n \to 0$ as $n \to \infty$.
+$\newline$
+Now recall, although a randomly chosen node will have degree
+$\langle d \rangle = \frac{\sum_{i \in N}d_i}{n}$, the degree
+of the node of a randomly chosen end of a randomly chosen link is
+\begin{equation}
+    \sum_{i \in N} \left( \frac{d_i}{2m} \right) d_i = \frac{\sum_{i \in N} d_i^2}{2m} = \frac{n \mathbb{E} [d^2]}{n \mathbb{E} [d]} = \frac{\langle d^2 \rangle}{\langle d \rangle} = \langle d \rangle + \frac{\operatorname{Var} (d)}{\langle d \rangle}
+\end{equation}
+where $\langle d \rangle = \frac{2m}{n}$. 
+
+In the configuration model, however, each stub connects to each
+of the other $2m-1$ other stubs with equal probability. 
+This probability
+distribution is called the \textbf{excess degree distribution}. $\newline$
+Thus, we get
+the excess degree distribution is the same as the degree distribution for the configuration model. Namely, the excess degree
+distribution is given by $$\frac{d}{2m}nP(d)=\frac{dP(d)}{\langle d \rangle}$$
+
+\subsection{Giant Components}
+
+For the configuration Model, under the branching tree assumption,
+we thus get from the excess degree
+distribution, the expected number of distance-$k$ neighbors is 
+\begin{equation}
+    \langle d \rangle \left(\frac{\langle d^2 \rangle}{\langle d \rangle}-1\right)^{k-1}
+\end{equation}
+
+The value $\left(\frac{\langle d^2 \rangle}{\langle d \rangle}-1\right)$ is called the \textbf{reproduction number}.
+$\newline$
+
+\textbf{Molloy-Reed Criterion}: In general, a giant component exists iff the reproduction number $\ge 1$ implying divergence of the number of distance-$k$ neighbors.
+This is only the case if 
+\begin{equation}
+    \frac{\langle d^2 \rangle}{\langle d \rangle} \ge 2
+\end{equation}
+
+\subsection{The Morris-Contagion Model}
+If you immunize a fraction $\pi$ of the population (they can no
+longer be in the giant component) then $$R=\left(\frac{\langle d^2 \rangle}{d}-1\right)(1-\pi)$$ so a giant component emerges iff 
+\begin{equation}
+    \pi < \pi^*= 1- \frac{\langle d \rangle}{\langle d^2 \rangle - \langle d \rangle}
+\end{equation}
+$\pi^*$ is called the \textbf{contagion threshold} because to 
+prevent infection of a positive fraction of nodes, must remove
+$\pi^*$ of them.
+
+\subsection{Small-World Models}
+
+ER has an \textit{unrealistically} concentrated degree distribution
+with low clustering. Configuration model has unrealistically low
+clustering. $\newline$
+This motivates the \textbf{small world model} which has 
+\begin{itemize}
+    \item Realistic degree distribution
+    \item Small diameter and average path length
+    \item High clustering
+\end{itemize}
+
+More specifically, the \textbf{Watz-Strogatz Small-World Model} 
+starts with a ring network of $n$ nodes where each node is connected to its $2k$ closest neighbors (this has high clustering/diameter/patch length). $\newline$
+Then, randomly \textit{rewire}
+a small fraction $p$ of the nodes (as in ER). $\newline$
+More specifically, the average path length $\approx \log n$, 
+interval length $\approx 1/kp$ and diameter $\le \approx \log n$. 
+In this sense, it is a ``linear interpolation'' between a regular
+ring network and an ER graph.
+
+\section{Power Laws, Dynamic Network Formation and}
+\section{Preferential 
+Attachment (L8)}
+
+\subsection{Power Laws}
+We now focus on ``dynamic'' graph formation. Indeed, many 
+application networks appear to have degree distribution that scales
+as a \textbf{power law distribution}, ie. $p(k)=k^{-\alpha}$ for 
+$\alpha$. This is controversial, because power laws have ``fat tails''.
+$\newline$
+More formally, a nonnegative RV $X$ has a \textbf{power law distribution}
+if its cdf tail falls polynomially with power $\alpha$, ie. 
+$$\mathbb{P}(X \ge x) \sim cx^{-\alpha}$$
+For example, in a \textbf{Pareto Distribution} the cdf $$\mathbb{P}(X \ge x) = \left(\frac{x}{t}\right)^{-\alpha}$$ satisfies a power law distribution. The density function is given by $p(x)=\alpha t^{\alpha}x^{-\alpha-1}$, with the density having infinite variance
+if $\alpha \le 2$ and infinite mean if $\alpha \le 1$.
+$\newline$
+
+Practically, how to test if it's a power law distribution? \textit{Idea}: 
+visualize on a log-log scale and check if it decays roughly linearly. $\newline$
+
+Some other power law terms:
+\begin{itemize}
+    \item \textbf{Power Law}: $\mathbb{P}(X \ge x) \approx cx^{-\alpha}$
+    \item \textbf{Scale-Free}: $P(cX)=f(c)\mathbb{P}(X)$ where
+    $f$ satisifes some power law. Scale-free everywhere usually
+    satisfy a power law so we use the terms interchangeably.
+    \item \textbf{Heavy-Tailed}: $\lim_{x \to \infty}e^{\lambda x}\mathbb{P}(X \ge x) \to \infty$ for all $\lambda > 0$, ie.
+    doesn't die slower than exponential.
+    \item \textbf{Fat Tailed}: tails die $\approx$ slower than exponential.
+\end{itemize}
+
+In summary, Power Law $\approx$ Scale Free $\subset$ heavy tailed
+$\subset$ fat tailed.
+\subsection{Uniform Attatchment Model}
+
+In an \textbf{uniform attatchment model}, nodes are born over time and form 
+$m$ links to existing nodes when born, uniformly at random. Older nodes will
+have higher degrees, but since random, only very old nodes will have
+substantially higher average degrees. $\newline$
+
+Fraction of nodes with degree $\ge d$ equals $e^{-(d-m)/m}$ so it
+has thin tails and does \textit{not} generate a power law 
+distribution. Because the generation process is stochastic, we
+keep track of only the \textit{expected} degrees rather than the
+realized properties which is an example of the \textbf{mean-field
+approximation}. $\newline$
+
+The rate of the degree growth over time is given by:
+\begin{equation}
+    \frac{d}{dt}d_i(t) = \frac{m}{t}, \quad d_t(t)=m \implies d_i(t) = m +
+    m\log\frac{t}{i}
+\end{equation}
+To see that older nodes have higher expected degree, remark for 
+any degree $d$ and time $t$, if $i(d)$ is the node such that
+$d_{i(t)}=d$, the fraction of nodes have expected degree $\le d$
+is $F_{t}(d)=1-\frac{i(d)}{t}$ which gives us the fraction of 
+nodes with expected degree less than $d$ is 
+\begin{equation}
+    F_t(d)=1 - e^{-(d-m)/m}
+\end{equation}
+
+which is ``thin-tailed'' as in ER. In fact, it
+can be shown as $t \to \infty$, $F_t$ is also
+the realized degree.
+
+\subsection{Preferential Attatchment}
+With dynamic graph formation there is the idea of \textbf{``rich gets richer''}: degree distribution 
+depends heavily on initial conditions. This idea of the growth of the quantity
+depending on how much they already have is called \textbf{cumulative advantage}
+or \textbf{preferential attatchment} (Barabasi and Alber 1999). $\newline$
+
+Treatment is similar to uniform attatchment, but
+rather than linking randomly upon generation,
+new nodes link to pre-existing nodes with 
+\textit{probability proportional to their
+degrees}. Instead, existing node $i$ forms a 
+new link from a new node at time $t$ is
+\begin{equation}
+    m\frac{d_i(t)}{\sum\limits_{j=1}^{t}d_j(t)}
+\end{equation}
+
+Older nodes will then have much higher degree
+distribution, leading to a power law degree
+distribution. The differential equation for expected degree
+growth is given by:
+\begin{equation}
+    \frac{d}{dt}d_i(t) = \frac{d_i(t)}{2t}, \quad d_t(t)=m
+    \implies d_i(t) = m\left(\frac{t}{i}\right)^{1/2}
+\end{equation}
+Now, the growth of older nodes grows as $\sqrt{t}$ rather than
+$\log t$, so older nodes have degree distribution that grows
+much quicker than in uniform attatchment. The cdf (fraction of
+nodes with degree greater than $d$) is given by:
+\begin{equation}
+    \mathbb{P}_t(D \ge d) = \left(\frac{m}{d}\right)^2
+    \implies \mathbb{P}_t(d) = 2m^2d^{-3}
+\end{equation}
+
+\subsection{Pareto, Log Normal, Zipf, and Girat}
+
+Another heavy-tailed distribution is the \textbf{log-normal 
+distribution}, ie. where the $\log$ of the random variable is
+normally distributed. Log-normal distributions are heavy-tailed
+but tails are thinner than polynomial. $\newline$
+
+By the CLT, the \textit{geometric} mean converges to log normal
+so the growth rate converges to log-normal, which is called the
+\textbf{law of proportional effect} or \textbf{Gibrat's Law}.
+$\newline$
+
+On the other hand, \textbf{Zipf's Law} showed that the population
+of cities falls as $1/t$, so the population is better approximated
+by a Pareto Distribution. $\newline$
+
+How do we differentiate? The idea is if there are:
+\begin{itemize}
+    \item A fixed number of growing cities with iid growth rates
+    $\implies$ log-normal (Gibrat's Law)
+    \item Growing number of growing cities with iid growth rates
+    $\implies$ Pareto distribution, in a process called a 
+    \textbf{Kesten process}
+\end{itemize}
+\section{Diffusion Through Networks and Society (L9-10)}
+
+We start with a class of diffusion models called \textbf{Compartmental Models}
+because at each point in time each individual is in one of several
+states or compartments, namely:
+\begin{itemize}
+    \item \textbf{Susceptible (S)}: the individual has not yet been
+    affected and is susceptible to infection
+    \item \textbf{Infectious (I)}: Individual is currenly affected,
+    and can pass the infection to others
+    \item \textbf{Removed (R)}: Individual is no longer affected and
+    is now immune.
+\end{itemize}
+
+We will cover three main types of Compartmental Models:
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{SI Model}: Once you're infected, you stay infectious forever. Thus, everyone gets infected eventually. The \textbf{Bass Model} generalizes, that
+    allows ``innovation'' of disease in addition to infection.
+    \item \textbf{SIR Model}: Once infected, infectious for a while,
+    but then recover forever. Now, typically the reproduction number
+    $R_t$ drops below $1$ so not everyone can be infected. The point
+    at which this happens is called the \textbf{herd immmunity threshold}.
+    \item \textbf{SIS Model}: Like SIR, but you can recover and then
+    get infected again. Instead, a \textbf{steady state} is reached
+    where $R_t=1$.
+
+The simplest type of diffusion models assume a \textbf{homogenous population}
+where everyone is equally likely to meet everybody else. More realistically,
+we instead assume \textbf{heterogenous contact rates} where some people are more likely to meet others.
+\subsection{Diffusion of Innovation}
+
+Suppose there is some innovation that spreads through a diffusion process. The
+\textbf{Bass Model} simply tracks the spread by spliting adoption based on 
+the result of \textbf{innovation} or \textbf{imitation}. If $F(t)$ is the fraction of the population that has adopted the product, $p$ is the \textbf{innovation rate} and $q$ is the \textbf{imitation rate}, we get
+\begin{equation}
+    F(t+1)-F(t)=(1-F(t))(p+qF(t))
+\end{equation}
+We assume $p+q \le 1$ to avoid double counting. The SI model is the case in 
+which $p=0$. $\newline$
+It is easier to analyze the continuous version: 
+\begin{equation}
+    \frac{dF}{dt}=(1-F(t))(p+qF(t)) 
+\end{equation}
+which gives 
+\begin{equation}
+    F(t)=\frac{1-e^{-(p+q)t}}{1+\frac{q}{p}e^{-(p+q)t}}
+\end{equation}
+The resulting $F$ is called the \textbf{adoption curve} of the product. If 
+$p >q $ the adoption curve is \textbf{concave}; if $p < q$ the adoption curve
+is\textbf{S-shaped.}
+
+\subsection{Concave or S-Shaped Adoption?}
+
+ At high adoption levels, the 
+curve will always be concave due to saturation, but whether the curve at low adoption levels will be concave or $s$-shaped depend on the  simple relation between $p$ and $q$. Namely,
+\begin{itemize}
+    \item If $q$ is higher, ie. the adoption rate is higher, this
+    will speed up adoption so the curve will be $S$-shaped.
+    \item If $p$ is higher, higher adoption slows down adoption 
+    and there are fewer non-adopters to innovate. 
+\end{itemize}
+\subsection{SIR Model}
+
+For SIR Models, we have a susceptiblity fraction $S(t)$, infectious
+fraction $I(t)$, and a recovered fraction $R(t)$ where $S(t)+I(t)
++R(t)=1$. Two additional parameters:
+\begin{itemize}
+    \item \textbf{Transmission Rate} $\beta$
+    \item \textbf{Recovery Rate} $\gamma$
+\end{itemize}
+
+The dynamics of the SIR Model is modeled by three equations: 
+$\newline$
+
+First,
+the \textbf{susceptible equation}, ie. the susceptible fraction $S(t)$ meets an infected person with probability $I(t)$ and gets infected with
+probability $\beta$:
+\begin{equation}
+    \frac{dS}{dt}=-\beta S(t)I(t) = -\gamma R_0S(t)I(t)
+\end{equation}
+S(t) decreases over time (monotonically). $\newline$
+
+Second, the \textbf{infection equation}: 
+\begin{equation}
+    \frac{dI}{dt}=\beta S(t)I(t)-\gamma I(t)=\gamma R_0 S(t)I(t) - \gamma I(t)
+\end{equation}
+where $\gamma$ of the $I(t)$ recover. \newline
+
+Finally the recovery equation, 
+\begin{equation}
+    \frac{dR}{dt}=\gamma I(t)
+\end{equation}
+\end{enumerate}
+
+On average, an infected person infects $R_0=\beta / \gamma$ others before they
+recover so we call it the \textbf{basic reproduction number}. 
+$\newline$
+
+The SIR model has no closed form solution but:
+\begin{enumerate}[label=(\alph*)]
+    \item The infectious share of the population is maximized when
+    $\dot I(t)=0$, ie. $R_0S(t)=1$ (which is called the \textbf{herd-immunity threshold}). 
+    \item R(t) keeps increasing with $\lim_{t \to \infty}R(t)=1 - \lim _{t \to \infty}S(t)$ (since $\lim_{t \to \infty} I(t)=0$ 
+    since we have a SIR model).
+    \item The difference $R(\infty)-R(t)$ where $R_0S(t)=1$ is called the degree of \textbf{overshooting}.
+\end{enumerate}
+
+\subsection{What Percentage of the Population Get Sick?}
+What percentage of the population get sick? Through some algebra
+we can get:
+\begin{equation}
+    R(\infty)=1-e^{-R_0 R(\infty)}
+\end{equation}
+
+This is precisely the expected number of elements in the giant
+component of an Erdos-Renyi graph! Thus, by Molloy-Reed, if $R_0 \le 1$ then $R(\infty)=0$, while it increases rapidly as a concave
+function of $R_0$. $\newline$
+
+Identically, the SIR model can be seen as drawing a link from $i$
+to $j$ if ``when $i$ gets sick, $i$ will infect $j$ before $i$ 
+recovers (if $j$ isn't sick already)'' with the link probability 
+being $R_0/n$. This viewpoint in terms of random graphs is called
+\textbf{percolation}.
+
+\subsection{Key Lessons From the SIR Model}
+
+We can learn some main takeaways from the SIR Model:
+\begin{itemize}
+    \item I(t) grows exponentially when $S(t) \approx 1$ and falls
+    exponentially when $S(t) \approx 0$ so (roughly) normal
+    \item What is the value of lockdowns (ie. setting $\beta=0$)? 
+    It is impossible to avoid reaching the herd immunity threshold, 
+    but overshooting can be reduced by imposing lockdown as soon
+    as herd immunity is reached. 
+    \item What about vaccinations? Vaccinating a fraction $\pi$ of
+    the population reduces $S(0)$ to $1-\pi$ which can greatly
+    reduce $R(\infty)$.
+\end{itemize}
+
+\subsection{Heterogeneous-Agent SIR and Homophily}
+
+The SIR equations can be extended to the heteogeneous case, where
+each each person can have a different ``degree'' $d$. Each meeting
+is then with a degree $d$ individual with probability $dP(d)/\langle 
+d \rangle$. This is precisely equivalent to the setup of the 
+configuration model and $R(\infty)$ is the size of the GC of the 
+configuration model. $\newline$
+
+Let $\tilde{P}(d)=\frac{P(d)d}{\langle d \rangle}$ be the excess degree distribution. Let $q$ be the probability the branching
+ process does not die out starting from an arbitrary node. We then get
+ the recursion:
+ \begin{equation}
+     1-q = \sum\limits_{d=0}^{\infty}P(d)(1-q)^d
+ \end{equation}
+ 
+The fraction of nodes in the giant component of the configuration model then converges to $q$. Although this does not have a closed form, we can determine when a giant component exists (doesn't die out), for which the disease takes over a fraction of the population:
+this holds iff the Molloy-Reed criterion $\frac{\langle d^2 \rangle}{\langle d \rangle} > 2$ which means more variacne in diesease makes 
+it easier to invade. In the SIR Model (ER Network) this occurs iff $R_0 > 1$ while for a regular network this occurs if $R_0 > 2$. For scale free ($0 \le \gamma \le 3)$, a GC exists even if $R_0$ is arbitrarily small. $\newline$
+
+Can introduce \textbf{homophily} by making agents more likely to meet
+agents of their own type, ie. $p$ of the meetings are with those of 
+same degree. You can show as you increase $p$, the threshold value 
+of $R_0$ for disease to invade decreases in $p$, so with more
+homophily the disease invades easier.
+
+\subsection{SIS Model}
+
+In the SIS model, the individual becomes susceptible again after 
+recovering. The equations are given by:
+\begin{align}
+    \dot S(t) &=\gamma I(t)-\beta S(t)I(t) \\
+    \dot I(t) &= \beta S(t)I(t) - \gamma I(t)
+\end{align}
+where $\beta$ is the transmission rate, $\gamma$ is the recovery
+rate (and $S(t)+I(t)=1$). With $R_0 := \beta / \gamma$ being the 
+reproduction rate, we can rewrite these as:
+\begin{align}
+    \dot S(t) &= \gamma I(t) - \gamma R_0S(t)I(t) \\
+    \dot I(t) &= \gamma R_0S(t)I(t) - \gamma I(t)
+\end{align}
+
+For an SIS model, the \textbf{steady-state infection level} $I$ is 
+given by the stationary point of $S$:
+\begin{equation}
+    \dot S = \gamma I - \gamma R_0(1 - I)I = 0 \implies 
+    I = \begin{cases} 1 - \frac{1}{R_0} \quad \text{ if } R_0 \ge 1 \\
+    0 \quad \quad \quad \; \; \text{ if } R_0 < 1\end{cases}
+\end{equation}
+
+\subsection{Heterogeneous-Agent SIS}
+
+For the heterogeneous case, let $I_d(t)$ be the share of degree $d$
+nodes infected at time $t$. There is a positive study-state infection
+level iff 
+\begin{equation}
+    \frac{\langle d^2 \rangle}{\langle d \rangle} > 1
+\end{equation}
+To see this, note if $I_d(t)$ is the fraction of degree $d$ nodes that
+is infected, the share of \textbf{infected people} is given by
+$\sum_{d}P(d)I_d(t)$. Each \textbf{meeting} is with an infected
+invididual with probability:
+\begin{equation}
+    \theta(t) = \frac{\sum_{d} dP(d)I_d(t)}{\langle d \rangle}
+\end{equation}
+which is a good measure of the \textbf{infection level}. At the
+steady state, we will have
+\begin{equation}
+    I_d = \frac{d\theta}{d\theta + 1}
+\end{equation} with $\theta$ 
+satisfying 
+\begin{equation}
+    \theta = \sum_{d}\frac{d^2\theta P(d)}{\langle d \rangle (d\theta + 1)}
+\end{equation}
+That is, there is a positive steady-state infection level iff $$H(\theta) = \sum_{d}\frac{d^2\theta P(d)}{\langle d \rangle (d\theta + 1)} $$
+has a non-zero fixed point. One can find through differentiation that this holds iff
+$\langle d^2 \rangle / \langle d \rangle > 1$.
+
+\subsection{Behaviorial SIR Models}
+
+In practice, people take actions to prevent
+and/or reduce infection so there is a behaviorial dynamic to SIR models. For high 
+$I(t)$, for example, people may pay a ``cost''
+(eg. going out less) to lower the transmission
+rate $\beta$. $\newline$
+
+More specifcially, suppose at each point an
+individual can pay a cost $\mathbf{c}$ (called
+the action \textbf{vigilance}) to eliminate 
+their risk of getting infected. Suppose
+individuals percieve the \textbf{harm} they
+suffer if they get infected as $h$. It is 
+worth it to pay the vigillance cost if
+\begin{equation}
+    c < \beta I(t) h \leftrightarrow I(t) > \frac{c}{\beta h} = I^*
+\end{equation}
+If $I(t) < I^*$, no one is vigilant, while if
+$I(t) > I^*$, everyone is vigillant. If 
+$I(t) = I^*$ people are indifferent so we get
+what we called a \textbf{mixed-strategy 
+equillibrium}. $\newline$
+
+Thus, in practice, the epidemic will follow
+three phases:
+\begin{enumerate}
+    \item \textbf{Rising Phase}: Initially,
+    $I(t) \approx 0$ so no one is vigilant. 
+    Then, $I(t)$ starts rising so the
+    epidemic proceeds as in SIR.
+    \item \textbf{Plateu Phase}: Once $I(t)$ hits $I^*$, it remains exactly so as 
+    otherwise $I(t)$ can't rise above $I^*$
+    (so we would eventually get herd immunity)
+    or everyone becomes vigillant.
+    \item \textbf{Declining Phase}: Once
+    herd immunity is reached, everyone stops
+    being vigillant and $I(t)$ falls back to 
+    $0$ in the standard SIR model.
+\end{enumerate}
+
+\section{Seeding and Contagion (L11)}
+
+Whereas the simplest models of diffusion through networks are ``mechanical'' (works
+without any outside intervention), but in practice interventions and strategic 
+decisions play key roles. 
+
+\subsection{Optimal Seeding}
+
+For some types of technologies, eg. spread of beneficial new technologies, we want
+to help spread diffusion. This problem is called \textbf{optimal seeding}, ie. which
+nodes to ``seed'' first to maximize spread of diffusion. $\newline$
+
+The diffusion model takes the following form: 
+\begin{itemize}
+    \item Each node is either \textbf{informed} on \textbf{uninformed}, and also 
+    either \textbf{participates} or \textbf{does not participate}. 
+    \item Each informed node that participates tells each neighbor about the program
+    with probability $\alpha_P$. Each informed node that does not participate tells
+    its neighbors with probability $\alpha_N$.
+    \item Newly informed node participates with probability $p+\lambda f$. $p$ is 
+    called the \textbf{baseline participation probability} and $\lambda$ measures
+    the \textbf{endorsement effect}.
+    \item The process repeats $T$ times. 
+\end{itemize}
+
+The \textbf{BSS} experiment finds $\alpha_P \approx 0.35$, $\alpha_{N} \approx 0.05$, with $\lambda \approx 0$. 
+
+\subsection{Diffusion Centrality}
+
+How do you measure which nodes are important/central (which leads to 
+high importance in optimal seeding)? \textbf{Diffusion Centrality} is
+a relevant centrality measure (Banerjee), defined by 
+\begin{equation}
+    \left[\sum\limits_{t=1}^{T}(\alpha g)^{T}\right]\cdot \mathbf{1}
+\end{equation}
+where here, $\alpha = \alpha_P = \alpha_N$ for simplicity. The diffusion
+centrality represents the expected total number of times that someone
+hears the information passing from node $i$. $\newline$
+
+For $T=1$, this is just the degree centrality (times $\alpha$). As 
+$T \to \infty$, either it converges to a scaled Katz-Bonacich centrality
+(if $\alpha < 1/\lambda_1$) or eigenvector centrality (if $\alpha > 1/\lambda_1)$. Banerjee find this is a better measure of centrality 
+in the diffusion case. Indeed, they find that by asking villagers who the
+``gossips'' (highly influential, central people) are, they find they are
+more important in eigenvector and diffusion centrality measures. 
+
+\subsection{Complex Contagions: Do Seeds Really Matter?}
+
+If central nodes get infected anyway, does seeding matter? 
+Akbarpour, Malladi, and Saberi (2023) show that for a simple diffusion
+model, for a large enough graph, optimal seeding does not really matter.
+That is, random seeding works quite well in standard diffusion model. 
+Some caveats, however:
+\begin{enumerate}[label=(\alph*)]
+    \item This only holds for \textit{simple} diffusion models, where
+    each infected node infects susceptible neighbors with equal 
+    probability $\alpha$. 
+    \item Does matter under \textbf{complex contagion}, where must be
+    infected by \textit{several} neighbors to become infected, ie. number
+    of infected neighbors must reach a \textbf{threshold}.
+\end{enumerate}
+
+Intuitively, we find that in fact some idea of complex contagion goes on
+in things like more advanced technologies. Indeed, in many social situations, especially those with a ``coordination'' aspect, an individual
+wants to change their behavior iff \textbf{sufficiently many} of their
+neighbors do to.
+
+\subsection{Threshold Models}
+
+A good model for complex contagion is thus the \textbf{threshold model}
+or \textbf{threshold contagion}. Centola and Macy (2007) study it in the context of the Wattz-Strogatz small world model and find that rewiring helps simple contagion 
+but only helps in complex contagion up to a point, as they need close-knit groups
+to get complex contagion started. $\newline$
+
+One such example is the \textbf{Morris Contagion Model} with a graph $G=(N,E)$, with
+each agent(node) taking an action $a \in \{0,1\}$ iff more than a fraction $q \in
+(0,1)$ of the neighbors take action $1$ (with tiebreaks, eg. exactly fraction $q$ 
+being broken arbitrarily). Intuitively, $q$ measures the ``inherent
+quality'' of action $0$ relative to action $1$. $\newline$ 
+
+What are the \textbf{equilbria}/study states of the model? To analyze this, we start by defining \textbf{cohesiveness}. $\newline$
+
+For any $p \in [0,1]$ we say a set $S \subset N$ is \textbf{p-cohesive} 
+if, for each $i \in S$, at least a fraction $p$ of $i$'s neighbors are 
+also in $S$. That is, 
+\begin{equation}
+    \min_{i \in S} \frac{|N_i(G) \cap S|}{|N_i(G)|} \ge p
+\end{equation}
+Intuitively, there can be equilbria if society contains highly cohesive
+groups that can ``coordinate'' on different norms. Indeed, we get the
+following theorem:
+
+\begin{theorem}[Cohesiveness Equality]
+    For any $S \ne \emptyset$, $N$, it is an equilbrium for everyone
+    in $S$ to choose action $1$ and everyone else to choose action $0$ 
+    iff $S$ is $q$-cohesive and $N \backslash S$ is $(1-q)$-cohesive.
+\end{theorem}
+
+The interpretation is that the more cohesive sets there are in a network, there are
+is more scope for diverse patterns in the behavior. This tells us when an equilibrium
+\textit{occurs} but does not specify when exactly this may happen. This is the question of \textbf{contagion}.
+
+\subsection{Contagion}
+
+Suppose we start by seeding some subset of nodes $S \subset N$ and letting all those
+nodes have $a=1$ and all other nodes have $a=0$. We now repeat the diffusion process, with the condition that the diffusion is \textbf{progressive} (ie. we don't
+allow switching back from $a=1$ to $a=0$). We say there is a \textbf{contagion from}
+$S$ if this process results in $a=1$ taking over.
+
+\begin{theorem}[Contagion Theorem]
+    There is a contagion from $S$ iff, for any superset $S \subset S'$ the set 
+    $N \backslash S'$ is not $(1-q)$-cohesive. 
+\end{theorem}
+
+This theorem tells us that even for superior innovations (low $q$), they
+can not be spread if the network is highly cohesive. Conversely, inferior
+innovactions can spread if the network is seeded well. This has some 
+limits as we will see soon: $\newline$
+
+Consider the extension to an infinite graph, where we define 
+\textbf{contagion from } $S$ means that given a finite initially 
+infected set $S$, adoption grows without bound. A striking result says
+that an inferior innovation ($q < 1/2$) can \textit{never} spread.
+
+\begin{theorem}
+    For any infiite graph where each node has finite degree, if $q > 1  /2$  then, for any finite seed set $S$, contagion does not spread (infinitely far) from $S$. That is, it can spread for a while but
+    not forever.
+\end{theorem}
+
+The proof follows from the fact that the \textbf{interface}, ie the number of edges connected to one infected and one non-infected node
+decreases over time for inferior $q$. 
+
+\section{Strategic Network Formation (L12)}
+
+Some networks are better described as being formed 
+\textit{strategically}, rather than randomly. 
+There can be both strategic \textbf{1-sided 
+linking} and \textbf{2-sided linking}, where 
+linking decisions are either unilateral or 
+bilateral, resulting in different structures.
+$\newline$
+
+The framework is given as follows: there are 
+$n$ agents in the network corresponding to the
+$n$ nodes with each node $i$ recieving a \textbf{payoff} as a function of the final network $$u_i = \mathcal{G} \to \mathbb{R}$$
+We take these as a given and study how a network
+forms in anticipation.
+
+\subsection{Efficiency and Utility Functions}
+A network $G$ is \textbf{Pareto efficient} if 
+there is no network $G'$ such that $u_i(G') 
+\ge u_i(G)$ for all $i$ with strict inequality 
+for \textit{some} $i$. $\newline$
+
+A network $G$ is \textbf{utalitarian efficient}
+if there is no network $G'$ such that 
+$\sum_{i \in N}u_i(G') \ge \sum_{i \in N}u_i(G)$.
+
+A utilitarian efficient network is Pareto 
+efficient but not the other way around. 
+
+One such distance-based utility function is given by:
+\begin{equation}
+    u_i(G) = \sum\limits_{j \ne i} b(l_{ij}(G))
+    - d_i(G)c
+\end{equation}
+where $l_{ij}$ is the distance, $d_i$ is the out-degree, $c$ is
+the cost of maintaining a link, and $b:\mathbb{N} \to \mathbb{R}$
+is a strictly decreasing benefit function depending on the distance
+with $b(\infty) = 0$. This models someone who benefits from being
+connected (esp. at short distances) but dislikes maintaining the 
+links themselves. For this, the utalitarian efficent network is 
+simply a star network leading to the \textbf{law of the few}.
+
+\subsection{2-sided Linking}
+
+An undirected network $G$ is \textbf{pairwise stable} if 
+\begin{enumerate}[label=(\alph*)]
+    \item For any $(i,j) \in G$ we have
+    $u_i(G) \ge u_i(G\backslash \{i,j\})$
+    \item For any $(i,j) \not\in G$, if 
+    $u_i(G \cup \{i,j\}) > u_i(G)$ than
+    $u_j(G\cup \{i,j\}) < u_j(G)$
+\end{enumerate}
+That is, no agent can gain unilaterally by cutting a link and no pair of agents can gain
+strictly by adding a link. $\newline$
+
+The star network is optimal for the distance-based utility function
+for two sided linking:
+\begin{theorem}
+    In the distance-based utility model with 2-sided linking, the
+    unique utilitarian efficient network is 
+    \begin{enumerate}
+        \item The complete network if $c < b(1) - b(2)$
+        \item An undirected star, if $b(1) - b(2) < c
+        < b(1) + \frac{n-2}{2}$
+        \item The empty network, if $c > b(1) + \frac{n-2}{2}b(2)$
+    \end{enumerate}
+\end{theorem}
+
+\subsection{1-sided Linking}
+
+A directed network $G$ is a \textbf{Nash Equilibrium} if $u_i(G) \ge u_i(G')$ for any
+network $G'$ where $g_{jk} = g'_{jk}$. That is,
+each agent chooses her set of out-links optimally
+taking all the other out-links as a given. $\newline$
+
+For one-sided linking, if paying the cost $c$ results 
+in two one-sided links, we get theorem $9$ but with 
+$c/2$. Otherwise, we can also get a \textit{cycle} is
+optimal.
+
+\subsection{Pairwise Stable Networks}
+
+Although the star is efficient, it is not always 
+stable:
+\begin{theorem}
+In the distance-based utility model with two-sided linking, the following hold:
+\begin{enumerate}[label=(\alph*)]
+  \item If \(c < b(1) - b(2)\), the unique pairwise stable network is the complete network.
+    (Recall that for these parameters, it is also efficient.)
+
+  \item If \(b(1) - b(2) < c < b(1)\), the star is pairwise stable.
+    (For some parameters, there are also other pairwise stable networks.)
+
+  \item If \(c > b(1)\), then in any pairwise stable network every player has either no links or at least two links.
+    (In particular, the star is not pairwise stable.)
+\end{enumerate}
+\end{theorem}
+
+\subsection{Couauthor Model}
+
+Distance-based utility model captures settings where link-formation comes with externalities. As before,
+if there is positive gain from linking, we say there 
+are \textbf{positive externalities}. In other settings,
+more links may cause \textbf{negative externalities}. 
+$\newline$
+
+For example, consider the \textbf{coauthor model}
+where 
+\begin{equation}
+    u_i(G)
+= \sum_{j \in N_i} \Bigl(
+   \frac{1}{d_i(G)}
+   \;+\;
+   \frac{1}{d_j(G)}
+   \;+\;
+   \frac{1}{d_i(G)\,d_j(G)}
+\Bigr) 
+\end{equation}
+
+Intuitively, it is best for each author to only have
+one coauthor:
+\begin{theorem}
+    In the coauthor model, if $n$ is even, the unique utilitarian efficient network consists of $n/2$ disjoint pairs.
+\end{theorem}
+The efficient network however is not stable.
+Stable networks instead consist of disjoint cliques of very di§erent sizes:
+\begin{theorem}
+    In the coauthor model, if \(n \ge 4\), any pairwise stable network is 
+inefficient and can be partitioned into fully connected components, each 
+with a different number of members. Furthermore, if \(m\) is the size of 
+one such component and \(m'\) is the size of the next-largest component, 
+then \(m' \ge m^{2} - 1\).
+\end{theorem}
+
+\section{Game Theory (L13)}
+
+We call multi-person decision problems, 
+\textbf{games}. The formal analysis of these sorts of
+problems is called \textbf{game theory}. $\newline$
+
+More specifically, a \textbf{game} consists of
+\begin{itemize}
+    \item a set of \textbf{players} $N=\{1,\cdots,n\}$
+    \item a \textbf{strategy set} $S_i$ for each $i \in N$
+    \item a \textbf{payoff function} $u_i:S_1\times\cdots\times S_n
+    \to \mathbb{R}$ for each player $i \in N$.
+    \item A vector $(s_1,\cdots,s_n) \in S := S_1 \times \cdots \times S_n$ a \textbf{strategy profile}. 
+\end{itemize}
+We write $s_{-i}$ to denote a vector of strategies
+for all players except $i$ (ie. strategies of all
+of \textbf{i's opponents}). Goal is for each player to maximize their
+\textit{own} payoff $u(s_i,s_{-i})$.
+
+\subsection{Static Games of Complete Information}
+
+We consider \textbf{static games of complete information}, where the game is played all at once,
+not over time, and there is no uncertainty in the game.
+$\newline$
+
+In 2 player games we can represent the game as a 
+\textbf{payoff matrix}. In the \textbf{prisoner's dilemna}, the two players get $2$ for both cooperating,
+$1$ for both defecting, and $3$ if one defects and $0$
+for the other when they cooperate. $\newline$
+
+How should a player choose their strategy? This is called a \textbf{solution concept}. A strategy 
+$s_i \in S_i$ for player $i$ is called \textbf{strictly
+dominant} if for every alternative strategy $s'_i \in 
+S_i$, we have $\forall s_{-i} \in S_{-i}$, 
+$u_i(s_i,s_{-i}) > u(s_i', s_{-i})$. In prisoner's 
+dilemma, both defecting is optimal.
+
+\subsection{Pure Strategy Nash Equilibrium}
+
+In most games, players will have rather than a 
+strictly dominant strategy, a \textbf{Nash Equilibrium}; each player plays optimally, \textit{taken as given} what everyone else is doing.
+$\newline$
+
+Given opponent's strategy $s_{-i}$, a \textbf{best 
+response} for player $i$ is an optimal action against
+$s_{-i}$: $u_i(s_i,s_{-i}) \ge u(s_{i}', s_{-i}), \quad
+\forall s_{i}' \in S_i$. $\newline$
+
+A \textbf{pure strategy Nash Equilibrium (PSNE)} is 
+a strategy profile $s^* \in S$ such that
+\begin{equation}
+    u_i(s_i^*,s_{-i}^*) \ge u_i(s_i, s_{-i}^*) \quad \forall{s_i} \in S_i, i \in N
+\end{equation}
+Intuitively, each player is playing a best response.
+If every player has a strictly dominant strategy, then
+the unique PSNE will be playing this strictly
+dominant strategy. 
+
+\subsection{Mixed Strategy Nash Equilibrium}
+
+A \textbf{mixed-strategy} $\sigma_i$ for each player
+$i$ is a probability distribution over $S_i$. Denote by
+$\Sigma_i$ the set of mixed-strategies of player $i$
+and let $\Sigma = \Sigma_1 \times \cdots \Sigma_n$.
+A player $i$'s \textbf{payoff} for a mixed strategy profile $\sigma=(\sigma_1,\cdots,\sigma_n)$ is her
+expected payoff under independent randomization: 
+\begin{align}
+    u_i(\sigma) &= \sum_{s \in S} \mathbb{P}_\sigma(s)
+    u_i(s) \\
+    &= \sum_{(s_1,\cdots,s_n) \in S} \left(
+    \prod_{j=1}^n \sigma_j(s_j)\right)u_i(s_1,\cdots,s_n)
+\end{align}
+
+A \textbf{mixed-strategy Nash Equilibrium (MSNE)} is an
+optimal mixed-strategy profile, ie. a $\sigma^* \in 
+\Sigma$ such that
+\begin{equation}
+    u_i(\sigma_i^*,\sigma^*_{-i}) \ge u_i(\sigma_i^*,
+    \sigma_{-i}^*) \quad \forall \sigma_i \in \Sigma_i,
+    i \in N
+\end{equation}
+
+There can be infinitely many mixed strategies. The
+following theorem allows us to check which of these 
+are Nash Equilibria by looking only at the pure 
+strategies within the support:
+\begin{theorem}
+    $\sigma^*$ is a NE iff 
+    \begin{equation}
+        u_i(\sigma_i^*,\sigma^*_{-i}) \ge u_i(s_i,
+        \sigma^*_{-i}) \quad \forall s_i \in S_i, 
+        i \in N
+    \end{equation}
+\end{theorem}
+
+\subsection{Existance of Nash Equilibria}
+
+A game is \textbf{finite} if every player's
+strategy set $S_i$ is finite. We have the following 
+key theorem:
+\begin{theorem}
+    Every finite game has a Nash Equilibrium (including
+    mixed-strategy NE)
+\end{theorem}
+
+\section{Network Traffic/Routing Games (L14-15)}
+
+\textbf{Network Traffic} is a type of game on a network where multiple
+individuals need to get from some point $A$ to some other point $B$ on a
+network while minimizing their own travel times. This will lead to Nash
+Equilibria which can be \textbf{socially efficient} or inefficient (maximizing total utility/lowering average delay). $\newline$
+
+We say that an \textbf{equilibrium routing} is a routing pattern that results from each agent choosing the route that minimizes her own delay.
+Equilibrium routing does not always correspond to social efficiency since 
+agents don't take into account \textbf{negative extranality} imposed on
+other agents by their actions. $\newline$
+
+We define this concept conceptually as follows: in a game with negative
+payoffs, the \textbf{price of anarchy} (POA) is the ratio of the total cost 
+borne by all agents at the worst equilibrium to the total cost of the
+social optimum. The corresponding cost at the best equilibium is called the
+\textbf{price of stability} (POS) and 
+\begin{equation}
+    1 \le POS \le POA
+\end{equation}
+
+\subsection{General Traffic Model}
+
+Consider a simple routing game where mass is normalized to $1$ and there is
+one starting point or origin point and one destination point. Let $P$ 
+denote the set of paths from the origin to destimation and let $x_p$ be the
+\textbf{flow} on the path $p \in P$ (the share of mass that takes path 
+$P$). Each $i \in E$ has a \textbf{latency
+function} $l_i(x_i)$, where $x_i$ is the total flow on link $i$ given by
+\begin{equation}
+    x_i = \sum_{p \in P: i \in P} x_p
+\end{equation}
+A \textbf{routing pattern} $x$ is a probability distribution on $P$. The 
+\textbf{total delay} of a routing pattern $x$ is 
+\begin{equation}
+    C(x) = \sum_{i \in E} x_i l_i(x_i) = \sum_{p \in P } x_p \sum_{i \in P}
+    l_i(x_i)
+\end{equation}
+
+\subsection{Socially Optimal and Equilibrium Routing}
+
+A routing pattern $x$ is \textbf{socially optimal} if it is a solution to
+the problem
+\begin{equation}
+    \min_x \sum_{i \in E} x_i l_i(x_i)
+\end{equation}
+subject to 
+\begin{align*}
+\begin{cases}
+    x_i = \sum_{p \in P: i \in p} x_p \quad &\forall i \in E \\
+    \sum_{p \in P}x_p = 1, \quad &x_p \ge 0\quad \forall p \in P
+\end{cases}
+\end{align*}
+
+Alternatively, a routing pattern $x$ is an \textbf{equilibrium} if for any
+path $p \in P$ with $x_p > 0$ there does not exist a path $p' \in P$ such that 
+\begin{equation}
+    \sum_{i \in p'} l_i(x_i) < \sum_{i \in p} l_i(x_i)
+\end{equation}
+That is, for any path with nonzero probability mass, there
+is no other path that is unilaterally better.
+
+In the context of non-atomic routing (continuum of players) this Nash
+Equilibrium is called \textbf{Wardrop Equilibrium}. 
+
+\subsection{Inefficiency of Equilibrium Routing}
+
+One can show that equilirbium routingg can be arbitrarily inefficient, in 
+fact with POA $\approx \infty$ (eg. take a route with 
+latency $x^k$ and another with $1$).
+
+\subsection{Improving Efficiency in Routing Networks}
+
+How can one reduce traffic in a routing network? Two 
+contenders are to build new links and increase capacity, 
+or to add congestion pricing (eg. tolls) to incentivize
+offsetting externalities. We focus on the second
+case. $\newline$
+
+Can reducing a latency function $l_i$ of a link ever
+increase socially optimal delay? No, we can retain the same pattern. Adding a link always decreases optimal 
+delay as well. Adding a new link \textit{can} however
+increase \textit{equilibrium} delay. This is called 
+\textbf{Braess's Paradox}, which shows that closing routes
+can reduce commuting time, even if the number of commuters
+does not fall. $\newline$
+
+\subsection{Congestion Pricing}
+How can we tackle this? We can add \textbf{congestion
+pricing}, ie. a \textit{toll} to some routes. In general,
+we can set the toll on a link $i$ equal to the externality
+of using link $i$, evaluated at the social optimum $x^*$:
+\begin{equation}
+    t_i = x_i^* l_i'(x_i^*)
+\end{equation}
+which is called a \textbf{Pigouvian tax} (or 
+\textbf{Piguouvian toll}). This gives a socially optimal 
+pattern as given by the following theorem:
+\begin{theorem}
+    With Pigouvian tolls, the socially optimal routing pattern x is also an equilibrium routing pattern.
+\end{theorem}
+This is the idea behind setting taxes to equal externalities to increase efficiencies. 
+
+\subsection{Routing Games as Potential Games}
+
+A \textbf{potential game} is one in which there exists a function $\phi: 
+S \to \mathbb{R}$ called a \textbf{potential function} such that, for any
+player $i$ and two strategies $s_i,s_i'$ switching from $s_i$ to $s_i'$ has
+the same effect on player $i$'s payoff as it has on the potential. The 
+\textbf{maxima} of the potential function corresponds to the 
+\textbf{equilibria} of a game. $\newline$
+
+Formally, a \textbf{potential function} is a function $\phi: S \to \mathbb{R}$ such that $\forall i \in N$, $s_i,s_i' \in S_i$ and $s_{-i}
+\in S_{-i}$:
+\begin{equation}
+    u_i(s_i',s_{-i})-u_i(s_{i},s_{-i}) = \phi(s_i',s_{-i}) -\phi(s_i,s_{-i})
+\end{equation}
+Intuitively, this potential function reflects \textit{all} player's 
+incentives simultaneously. Some examples of a potential game is a 
+\textbf{common interest game}, where all players have the same payoff
+$u: S \to \mathbb{R}$. $\newline$
+
+Potential games have some key properties, one of which is the existence of
+PSNEs:
+\begin{theorem}
+    Every finite potential game has a Pure Strategy Nash Equilibrium (PSNE).
+    Conversely, every PSNE is a local maximum or saddle point of $\phi$.
+\end{theorem}
+The key result is that all routing games are in fact potential games which
+implies the existence of PSNEs:
+\begin{theorem}
+    Every routing game is a (convex) potential game and therefore has a 
+    unique PSNE. In particular, the 
+    potential function is given by 
+    \begin{equation}
+        \phi(x) = \sum_{j \in E}
+        \sum_{i=1}^{x_j}l_j(i)
+    \end{equation}
+\end{theorem}
+
+\subsection{Potential Games and the Price of Stability}
+
+We showed for routing games with arbitrary latencies the state of
+anarchy can be arbitrarily large. For affine functions, however, the situation changes. 
+A latency function $l_j(x_j)$ is \textbf{affine} if it can be written as $l_j(x_j)=a_jx_j+b_j$ for constants $a_j,b_j \ge 0$. 
+\begin{theorem}
+    In any routing game with affine latency functions, $POS \le 2$
+\end{theorem}
+
+\section{Network Effects (L15-16)}
+
+A social or economic environment exhibits 
+\textbf{network effects} when each individual's
+optimal choice depends on some average of 
+other choices. There are \textbf{local network
+effects} if this depends only on the neighbors
+of the node. $\newline$
+
+\subsection{Strategic Complements}
+A simple example of a market without network effects is when there are
+a large number of individuals $i$ who choose between products
+$s_i \in \{0,1\}$ with a taste parameter $x_i \in \mathbb{R}^+$ which is
+the preference of $1$ over $0$ which has pdf $F(x_i)$. 
+\begin{theorem}
+    In the unique equilibrium, fraction $S=1-F(c)$ of the population 
+    chooses $s_i=1$ (ie. only people who have preference $c$ or higher
+    choose $1$). 
+\end{theorem}
+
+Now suppose we consider network effects. More specifically, suppose the
+utility of using a new product is better if more people use it. Such 
+a property is called \textbf{positive consumption externality}. That 
+is, now the preference is given by $h(S)$ where $h:[0,1] \to \mathbb{R}$
+is a continuous, increasing function. Equilibrium is reached when
+\begin{equation}
+    S = 1 - F\left(\frac{c}{h(S)}\right) := D(S)
+\end{equation}
+for which a solution always exists by the IVT. There can be, however,
+multiple equilibria, which is given by the following:
+\begin{theorem}
+    Assume that $c > 0$ and $h(0) = 0$ (so that $S = 0$ is always an equilibrium). There are multiple equilibria if and only there exists $S > 0$ such that $S \le D(S)$
+\end{theorem}
+
+\subsection{Welfare Comparisons for Multiple Equilibria}
+
+If there are multiple equilibria in a game with strategic complements
+and positive externalities, the equilibria can be \textbf{Pareto ranked}:
+\begin{theorem}
+    In our model of a market with network effects, if $S$ and $S'$ are 
+    both equilibrium levels of consumption of product $1$ and $S > S'$, then $S$ Pareto-dominates $S'$
+\end{theorem}
+
+\subsection{Comparitive Statics}
+How do changes in parameters affect behavior in the model? This is the
+problem of \textbf{comparative statics} which is difficult when there
+are multiple equilibria. For strategic complements (network effects)
+we focus only on greatest and smallest equilibria. 
+
+\begin{theorem}[Topkis Theorem]
+    In our model of a market with network effects, suppose that $x_i$ 
+    increases for a positive fraction of agents and remains the same 
+    for everyone else. Then the largest and smallest equilibrium values
+    of $S$ both weakly increase (i.e. either increase or stay the same).
+\end{theorem}
+
+The intuition is that increasing $x_i$ has both a \textbf{direct effect}
+in increasing $S$ and correspondingly since $h(S)$ increases more people
+adopt (\textbf{indirect effects}). 
+
+\subsection{Stability and Tipping}
+
+What equilibria are likely to emerge when there are multiple equilibria?
+It is useful to think about the \textit{dynamics} of the market to reach
+equilibrium. When $D(S) < S$, the share of people taking action $1$ will
+decrease while the opposite occurs when $D(S) > S$. This process is 
+called \textbf{best-response dynamics}. $\newline$
+
+From this, we see that equilbria such that $D(S)$ crosses $S$ from 
+\textit{below} is \textbf{stable} and the ones that cross from below
+are unstable, called \textbf{tipping points}.
+
+\begin{theorem}[Samuelson Correspondence Principle]
+    In our model of a market with network effects, the largest and smallest equilibrium values of $S$ are both stable. Intermediate equilibrium values may be unstable.
+\end{theorem}
+
+\subsection{Residential Choice}
+
+We now study \textit{local} network effects thorugh a specific example:
+residential choice (where to live). We first focus on residential choice
+with ``neighborhood effects''. $\newline$
+
+\textbf{Residential Choice with Neighborhood Effects} (\textbf{Becker-Murphy model}): Suppose there are two types of people $i \in \{0,1\}$ (low skill and 
+high skill) and two neighborhoods $j \in \{0,1\}$ (low amenities,
+high amenities) with $50\%$ of each type. 
+\begin{itemize}
+    \item Suppose the utility of a type-$i$ person living in neighborhood $j$ with share $x$ is given by $u_i(x,j)$. 
+    \item Everyone benefits from high-skill neighbors, ie. 
+    $\frac{\partial u_i}{\partial x} > 0$ (called \textbf{neighborhood
+    effect})
+    \item high amenity utility is always better: $u_i(x,1) > u_i(x,0),
+    \forall i, x$.
+\end{itemize}
+Unlike in strategic complements, there is now a ``fixed'' supply of
+each good. Also, the price difference between goods are fixed in 
+advance. The externality also now depends on \textit{which} people 
+consume the same good as you rather than the \textit{quantity} of people. 
+
+A type-$i$ person's \textbf{willingness-to-pay} to live in neighborhood
+$1$ when the share of high-skill people in neighborhood $1$ is 
+\begin{equation}
+    WTP_i(x) := u_i(x,1) - u_i(1-x,0)
+\end{equation}
+The \textbf{difference} in willingness-to-pay between high and low
+skill people is given by:
+\begin{equation}
+    \Delta WTP(x) := u_1(x,1) - u_1(1-x,0) - u_0(x, 1) + u_0(1-x,0)
+\end{equation}
+If:
+\begin{itemize}
+    \item $\Delta WTP(x) > 0$: more high-skill people move to neighborhood
+    $1$, more low-skill people move to neighborhood $0$
+    \item $\Delta WTP(x) < 0$: more high-skill people move to neighborhood
+    $0$, more low-skill people move to neighborhood $1$
+    \item $\Delta WTP (x) = 0$: no one moves. 
+\end{itemize}
+Now, an \textbf{equilibrium} is a price difference $p$ between the
+two neighborhoods and a share $x$ of high-skill people in neighborhood
+$1$ such that either:
+\begin{itemize}
+    \item \textbf{Segregation with positive sorting}: $x=1$ and
+    \begin{equation}
+        WTP_{1}(1) \ge p \ge WTP_{0}(1)
+    \end{equation}
+    This exists iff $\Delta WTP(1) \ge 0$ which happens intuitively
+    when high-skill people value peer effects and/or amenities more than low-skill people.
+    \item \textbf{Segregation with negative sorting}: $x=0$ and
+    \begin{equation}
+        WTP_{1}(0) \le p \le WTP_{0}(0) 
+    \end{equation}
+    This exists iff $\Delta WTP(0) \le 0$ which happens intuitively 
+    when high-skill people value peer effects more than low-skill 
+    people and/or value amenities less than low-skill people.
+    \item \textbf{Integration}: $x \in (0,1)$ and
+    \begin{equation}
+        WTP_{1}(x) = p = WTP_{0}(x)
+    \end{equation}
+    This occurs iff segregation with positive and negative sorting
+    are both strict equilbira (ie. $\Delta WTP(1) > 0$ and $\Delta WTP(0) < 0$) so by continuity it crosses $0$. 
+\end{itemize}
+Such an equilibrium is called \textbf{stable} if $\frac{\partial \Delta
+WTP(x)}{\partial x} < 0$. $\newline$
+
+Skill and peer effects are said to be \textbf{complements} if $u_1'(x,j) > u_0'(x,j)$ for all $x,j$ and said to be \textbf{substitutes} otherwise. The former intuitively means that 
+high-skill individuals value a marginal increase in neighbor's skill
+more than low skill people do, while the latter is the opposite.
+\begin{theorem}
+    If skill and peer effects are complements, any integrated equilibrium is unstable. If skill and peer effects are substitutes, any integrated equilibrium is stable.
+\end{theorem}
+
+\subsection{Additively Seperable Peer Effects}
+Consider a neighborhood effects model where the utility is \textbf{additively seperable} where everyone cares equally about peer effects, ie. there exists $v,w_i$ such that 
+\begin{equation}
+    u_i(x,j) = v(x) + w_i(j)
+\end{equation}
+In this case, skills and amenities are \textbf{complements} if $w_1(1) - w_1(0) > w_0(1)-
+w_0(0)$ and the opposite is true for substitutes.
+\begin{theorem}
+   For additively seperable utilities, if skill and amenities are complements, the unique 
+   equilibrium is segregation with positive sorting. If skill and amenities are 
+   tsubstitutes, the unique equilibrium is segregation with negative sorting.
+\end{theorem}
+
+\subsection{Efficiency in Equilibria}
+
+If share $x$ of high-ability people live in neighborhood $1$, the \textbf{utalitarian welfare} is defined as:
+\begin{equation*}
+    \frac{x}{2}u_1(x,1) + \frac{1-x}{2}u_1(1-x,0)+\frac{1-x}{2}u_0(x,1) + \frac{x}{2}
+    u_0(1-x,0)
+\end{equation*}
+A utalitarian efficient assignment will maximize this total welfare. Now remark, if the 
+peer effects $v$ is sufficiently concave, the value will be higher in the middle of
+$x \in (0,1)$ rather than at the endpoints which can push integration to be utalitarian
+efficient although the equilibria is segregation (with positive sorting). Intuitively, 
+this is because the high-skill people don't take into account externalities of leaving 
+neighborhood $0$. 
+
+\subsection{Residential Choice with Homophilly (Schelling Segregation Model)}
+
+In the \textbf{Schelling Segregation Model}, the local effects of homophilly are more pronounced although there are no prices on the notion of efficiency. The setup is as follows:
+\begin{itemize}
+    \item There are agents of two types randomly arranged on a grid
+    with a few empty spaces
+    \item A neighbor is \textbf{satisfied} if a percentage $p$ of her
+    (up to 8) neighbors are also of the same type and \textbf{unsatisfied} 
+    otherwise.
+    \item Each timestep, an unsatisfied agent is chosen and moved to
+    the closest empty space so that she's satisfied.
+    \item Process continues until everyone is satisied.
+\end{itemize}
+For $p=0.5$ found around $80\%$ end up satisfied in equilibrium.
+
+\subsection{Tipping Point Theory}
+
+Card et. al analyzed ``tipping point'' behavior where when the minority population is above
+some threshold or \textit{tipping point}, the share of the minority population increases
+while the opposite is true below a certain threshold. 
+
+Suppose a fraction $x$ of a neighborhood are minorities and $D(x)$ of those who move in are minorities. Just like strategic complements, we
+get equilibria when $x = D(x)$. Increase the demand, $D(x)$ by enough
+removes integrated equilibria. The points at which the integrated 
+equilibria disappears is called a \textbf{tipping point} and the
+minority share jumps discontinuously in response to small changes in the
+share.
+
+\section{Game Theory of Local Networks (L17)}
+
+How do we think about game theory of models with local strategic
+complements (coordination game) or substitutes (anti-coordination game)?
+$\newline$
+
+Suppose we have $n$ players on a graph with adjacency matrix $g$. 
+Consider the static game where each player $i$ takes a static 
+action $x_i \ge 0$. Denote a strategy profile $x:= (x_1,\cdots,x_n)$. Consider payoffs of the form
+\begin{equation}
+u_i(x) = b_i\left(x_i + \delta\sum_{j \ne i} g_{ij}x_j\right) 
+- c_ix_i
+\end{equation}
+where $b_i(\cdot)$ is an increasing, concave, differentiable \textbf{benefit function}, $\delta$ is a coordination parameter, 
+$c_i > 0$ is a \textbf{cost parameter}, measuring the cost or 
+effort. $\newline$
+
+We have $\delta > 0$ is \textbf{strategic substitutes} (anti-
+coordination game: work less hard when others pick up the slack)
+while $\delta < 0$ is \textbf{strategic complements} (use an app 
+like facebook: more they use the more you do) due to 
+concavity of $u_i(\cdot)$. 
+
+\subsection{Best Responses}
+
+For a given player $i$ and opponent strategy $x_{-i}$, the 
+optimal response is given by taking the derivative
+\begin{equation}
+    b_i'\left(x_i+\delta\sum_{j \ne i}g_{ij}x_j \right) = c_i
+\end{equation}
+so 
+\begin{equation}
+    x_i^* = \begin{cases}
+        \bar x_i - \delta\sum_{j \ne i}g_{ij}x_j \quad \text{ if }
+        \delta\sum_{j \ne i}g_{ij}x_j \le \bar x_i \\
+        0 \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+where $\bar x_i$ is the solution to $b'(\bar x_i) = c_i$. 
+
+\subsection{Local Public Goods}
+An example of this is given by a scenario where each player shovels
+snow. An agent can get out when the sum of the effort $x_i$ of her
+and her neighbors exceeds $1$. Then, $\delta=1$ and $\bar x_i = 1$
+with an equilibrium being achieved when:
+\begin{align}
+    \forall i &\text{ such that } x_i > 0, x_i + \delta\sum_{j \ne i}
+    g_{ji}x_j = 1 \label{eq:76} \\
+    \forall i &\text{ such that } x_i = 0, \delta   \sum_{j}g_{ij}x_j \ge 
+    1 
+\end{align}
+
+An equilibrium such that each agent $x_i$ takes either $0$ or $1$
+is said to be \textbf{specialized}. This is one special case of
+the above problem. Which agents work in a 
+specialized equilibrium? $\newline$
+
+A set of nodes $S \subset N$ in a network is a \textbf{maximally
+independent set} if no two nodes in $S$ are linked and every node
+not in $S$ is linked to at least one node in $S$.
+
+\begin{theorem}
+    In every network, a maximal independent set exists.
+\end{theorem}
+
+The proof is trivial by construction. From this, we can then
+generate specialized equilibria:
+\begin{theorem}
+    For any $S \subset N$, there is a specialized equilibrium where everyone in $S$ takes $x_i = 1$ and everyone else takes $x_i = 0$ iff $S$ is a maximal independent set. In particular, a specialized equilibrium always exists.
+\end{theorem}
+
+What if $0 < \delta < 1$ (strategic substitutes)? This leads to a
+system of linear equations given by \ref{eq: 76} based on whether 
+$x_C = 0$ or $x_P = 0$ or neither.
+
+\subsection{Linear Quadratic Payoffs}
+
+A simialr type of best-response game is when the payoff function
+is linear quadratic:
+\begin{equation}
+    u_i(x) := \bar x_i x_i -\delta \sum\limits_{j \ne i} g_{ij}x_i
+    x_j - \frac{1}{2}x_i^2
+\end{equation}
+for some arbitrary constant $\bar x_i$. The equilibria of this
+game are identical to the previous (purely linear) one.
+
+For a symmetric adjacency matrix $G$, the linear quadratic game
+is a potential game with potential function
+\begin{equation}
+    \phi(x) = \sum_{i} \left(\bar x_i x_i - \frac{1}{2}x_i^2\right)
+    -\frac{1}{2}\sum_{i,j} g_{ij}x_ix_j
+\end{equation}
+
+\subsection{Linear Quaratic Games with Strategic Complements}
+Now suppose the payoffs are (where $\delta < 0)$
+\begin{equation}
+    u_i(x) = x_i + \alpha \sum\limits_{j \ne i} g_{ij}x_i x_j - \frac{1}{2}x_i^2
+\end{equation}
+where here $\alpha := -\delta$. The first order conditions are given by 
+\begin{equation}
+    x_i = 1+\alpha \sum_{j \ne i} g_{ij}x_j \Leftrightarrow
+    \mathbf{x} = \mathbf{1} + \alpha g \mathbf{x}
+\end{equation}
+which gives optimal solution: 
+\begin{equation}
+    \mathbf{x} = (I - \alpha g)^{-1}\mathbf{1} = \Lambda \mathbf{1}
+\end{equation}
+which is precisely the Katz-Bonacich Centrality (in the transpose). 
+
+\section{Network Markets (L18-L19)}
+
+How does network phenomena affect economic interactions? We now 
+take the perspective of \textbf{networked markets}. Sometimes, we 
+can have a free, Laissez-Faire market (traditional economic markets) but other times there are
+restrictions on which agents can trade with each other. Other 
+times, there can be heterogenous valuations for sellers and a 
+small number of goods, etc. which are more like \textit{networks}. $\newline$
+
+The key features of ``networked markets'' are the following:
+\begin{itemize}
+    \item What are the \textbf{competitive} or \textbf{market-clearing} prices of
+    the network buyers and sellers? What are the properties of the resulting 
+    \textbf{competitive equilibria}?
+    \item How does the bnetwork structure determine \textbf{bargaining power}?
+    \item How are these properties determined in \textbf{intermediated markets}?
+\end{itemize}
+
+\subsection{Matching Markets}
+
+In a \textbf{matching market} (or \textbf{assignment game}), we have a bipartite 
+network with buyers $I$ and sellers $J$. For simplicity, 
+assume $|I|=|J|$ and each buyer only wants \textbf{one good} and each seller has only
+\textbf{one good} to sell. Next, suppose the value of goods are \textit{heterogeneous}
+and given by a matrix $\mathbf{v}$ with $v_{ij} \ge 0$ representing the value buyer $i$ values seller $j$'s good. The outcomes are \textbf{matchings} and \textbf{prices}.
+$\newline$
+
+The payoffs for buyer $i$ buying $j$'s good at price $p_j$ is given by:
+\begin{align}
+    i\text{'s payoff} & = v_{ij} -p_j \\
+    j\text{'s payoff} & = p_j 
+\end{align}
+\subsection{Competitive Equilibria}
+A \textbf{competitive equilibrium} is a bijection $M: I \to J$ and a nonnegativve
+price vector $p=(p_j)_{j \in J}$ such that for each each buyer $i$, if $j=M(i)$, then
+\begin{align}
+    v_{ij} -p_j &\ge v_{ij'} - p_{j'} \quad \forall j' \in J \label{eq: 85} \\
+    v_{ij} - p_j &\ge 0 
+\end{align}
+$M$ is called the \textbf{equilibrium assignment} (or \textbf{allocation}) with the
+condition that $M$ being a bijection being called the \textbf{market-clearing condition}, $p$ is the \textbf{market-clearing price vector}, and the condition that
+each buyer prefers their assigned good to any other for $p$ is the \textbf{individual
+optimization condition}. $\newline$
+
+An equivalent definition of a competitive equilibrium is a
+price vector $\mathbf{p} = (p_j)_{j \in J}$ together with
+a perfect matching in the graph where there is a link $(i,j)$
+iff $j$ is a \textbf{preferred-seller} for $i$ (ie. it follows equation \ref{eq: 85})
+
+\subsection{Efficiency}
+
+Are any competitive equilibria efficient? Define the \textbf{total value} generated by
+a matching $M: I \to J$ to be
+\begin{equation}
+    V(M) = \sum_{i \in I} v_{iM(i)}
+\end{equation}
+There exists (since $|I|,|J| < \infty$) an \textbf{optimal total value}
+\begin{equation}
+    V^* = \max_{M} V(M)
+\end{equation}
+
+The following theorem shows that competitive equilibria are indeed efficient:
+\begin{theorem}[First Welfare Theorem]
+    If $(M,p)$ is a competitive equilibrium, then $V(M) = V^*$
+\end{theorem}
+
+\subsection{Perfect Matchings}
+Competitive equilibriums are efficient but do they always
+exist? We first define some graph-theoretic terminology in 
+terms of bipartite graphs. A \textbf{perfect matching} in a 
+graph $G$ is a set of edges with no common vertices. In a
+bipartite graph, it is a bijection $\varphi: I \to J$ where
+$I$ and $J$ are the two parts.
+
+\begin{theorem}
+    There is always at least one competitive equilibrium.
+\end{theorem}   
+
+The idea is to consider the set $N(S)$ which is the set of all neighbors of nodes in $S$ and then use the following key
+graph theoretic result:
+\begin{theorem}[Hall's Marriage Theorem]
+    A bipartite graph between nodes $i \in I$ and $j \in J$
+    with $|I|=|J|$, has a perfect matching iff for all 
+    $S \subset I$, we have $|S| \le |N(S)| $
+\end{theorem}
+The key idea is to use alternating paths between nodes
+in the matching and nodes not in the matching. $\newline$
+
+The idea is then to make the algorithm take the form
+of an ``auction'', raising the prices of over-demanded
+goods. The key idea is to start with zero prices and 
+then raise the prices of things in constricted sets 
+before normalizing by the minimum price. In economics,
+this process of adjusting prices to balance supply and
+demand is called \textbf{tatonnement}.
+
+\subsection{Bargaining Power}
+
+\textbf{Bargaining power} refers to the share of value that each 
+individual gets in economic transactions. To study this and isolate
+the structure of the network, we today return to the matching markets
+setting but with $v_{ij} \in \{0,1\}$ ie. binary. The payoffs are then
+also binary. $\newline$
+
+\subsection{Stability of a Network Market}
+We can determine the bargaining powers of players in the network by
+considering the ``stable outcomes'' of the bargaining procedures. 
+Formally, for a subset of agents $M \subseteq N$, let $v(M)$ be the
+maximum value that they can create by trading on their own. For our 
+setting, this corresponds to a maximum matching in the subnetwork $M$
+(where $(i,j)$ is a link iff $v_{ij}=1$). A payoff vector $(u_i)_{i \in N}$ is stable, if for all $M \subseteq N$, we have
+\begin{equation}
+    \sum_{i \in M} u_i \ge v(M)
+\end{equation}
+with the set of all stable payoffs being called the \textbf{core} of
+the game. $\newline$
+
+Some facts about stable outcomes:
+\begin{theorem}
+    We have that 
+    \begin{enumerate}[label=(\alph*).]
+        \item If player $i$ is unmatched in some maximal matching (that
+        is, she is \textbf{under-demanded}) then
+        she gets a payoff of $0$ in every stable outcome.
+        \item If player $j$ is linked to some under-demanded player $i$,
+        he gets a payoff of $1$ in every stable outcome. Such a player
+        is said to be \textbf{over-demanded}.
+    \end{enumerate}
+\end{theorem}
+Thus, for cases where our nodes are either under or over demanded, 
+the stable payoffs are settled.
+\subsection{Dulmage-Mendelsohn Decomposition}
+
+We call a node that is neither over or under demanded, \textbf{perfectly-matched}. This comes from the following:
+\begin{theorem}[Dulmage-Mendelsohn Decomposition]
+    For a bipartie graph $G$ with under-demanded, over-demanded, and 
+    perfectly matched sets $U, O, P$, in every maximum matching:
+    \begin{enumerate}
+        \item Every node in $O$ is matched to a node in $U$.
+        \item Every node in $P$ is matched to another node in $P$.
+    \end{enumerate}
+\end{theorem}
+For perfectly-matched nodes, any price $p$ is possible in stable
+outcomes. This is called the \textbf{indeterminacy of contract}.
+
+\subsection{Bilateral Bargaining}
+
+If we make some assumptions about the details of the bargaining game,
+then we can find equilibria. That is, rather than thinking about 
+general markets, we take a specific game-theoretic viewpoint. We take
+two choices:
+\begin{itemize}
+    \item \textbf{Ultimatum Bargaining}: each party makes a take-it-or-leave-it offer to the other.
+    \item \textbf{Alternating-offers bargaining}: the parties take
+    turns making offers until they agree on a price.
+\end{itemize}
+
+\subsection{Ultimatum Bargaining}
+
+A \textbf{subgame perfect equilibrium (SPE)} is a strategy profile
+that remains a Nash Equilibrium conditional on reaching any point in 
+the game.
+
+\begin{theorem}
+    The ultimatum bargaining game has a unique SPE. In it, Seller's strategy is to offer $p = 1$, and Buyer's strategy is to accept any price.
+\end{theorem}
+
+\subsection{Alternating-offers Bargaining}
+
+The game ends if $B$ rejects in an ultimatum game. This is unrealistic in general scenarios: instead, in alternatin-offers
+bargaining:
+\begin{itemize}
+    \item In even periods $(t = 0, 2, 4, \cdots$, $S$ offers a price $p$. Then $B$ Accepts or Rejects. If $B$ Accepts, they trade at price $p$ and the game ends. If B Rejects, go on to the next period. 
+    \item In odd periods, the order flips.
+    \item If the game ends at price $p$ at time $t$, the payoffs
+    are $\delta^{t}_{S}p$ and $\delta^{t}_{p}(1-p)$ for $B$ where $\delta_{S},\delta_{B} \in (0,1)$ are \textbf{player discounts.}
+\end{itemize}
+
+\begin{theorem}
+    The alternating-offers bargaining game has a unique SPE: $S$ always offers price $p_S = \frac{1 - \delta_B}{1-\delta_{S}\delta_B}$ and accepts all prices greater or equal to  $p_B = \delta_S pS$; symmetrically, $B$ always offers price $p_B$ and accepts all prices less than or equal to $p_S$
+\end{theorem}
+
+\subsection{Intermediation on Networks}
+
+In general, the buyers and sellers might not be able to sell directly
+and goods are re-sold through many intermediaries. $\newline$
+
+We consider a 
+directed acyclic network $G$ with initial nodes $s \in N$ with only
+out-links, a final node $b \in N$ with only in-links and all other nodes
+have both in and out links. In each period $t$, some node is the
+current \textbf{owner} of the good (with $s$ being th einitial owner). 
+Goods are sold to downstream neighbors and when good reaches $b$, 
+utility of $1$ is begotten and game ends. In a simple line network,
+the price of the good \textit{doubles} at each step along the supply
+chain, with downstream intermediaries getting higher payoffs then
+upstream.
+
+\section{Trust and Cooperation (L20)}
+
+Before, we thought about the network effects of bargaining. What 
+strategies can groups use to support trust or cooperation? We model
+this by \textbf{repeated games}: the long run relationship of a set of
+players playing the same game over and over.
+
+\subsection{Repeated Games: Model}
+
+A \textbf{repeated game} $G^{T}(\delta)$ is a finite static game $G$
+with action sets $A_{1},\cdots,A_n$ and payoff functions $g_i:\prod A_i
+\to \mathbb{R}$ (called the \textbf{statge game}) and a \textbf{time horizon} $T$, discount factor $\delta \in [0,1]$. $\newline$
+
+In each period $t=1,\cdots,T$, the player simutaneously chooses actions
+$(a_1^{t},\cdots,a_{n}^{t})$ after observing all previous actions. The
+payoffs are 
+\begin{equation}
+    u_i = \sum_{t=1}^{T}\delta^{t-1}g_i(a_1^{t},\cdots,a_{n}^{t}) \quad
+    \forall i \in N
+\end{equation}
+For infinite $T$, we need $\delta < 1$. Some definitions:
+\begin{itemize}
+    \item A \textbf{history} in a repeated game is the action profiles
+    $(a_1^{\tau},\cdots,a_{n}^{\tau})_{\tau = 1}^{t-1}$ played up to the
+    current period $t$. 
+    \item A \textbf{strategy} for a player $i$ in a repeated game is
+    a function from histories to current period actions. 
+    \item A \textbf{Nash equilibrium} is a strategy profile where each strategy is a best response to others.
+    \item A \textbf{subgame perfect equilibrium (SPE)} is a strategy
+    profile where each strategy is a best response to the others, conditional on reaching any possible history.
+\end{itemize}
+
+\subsection{Repeated Prisoner's Dilemma}
+
+Suppose we consider the repeated prisoner's dilemna. We split into two cases: 
+\begin{enumerate}[label=\roman*.]
+    \item If $T$ is finite, by backward induction, $(D,D)$ is the unique SPE.
+    \item If $T$ is infinite, \textbf{grim-trigger} is a unique SPE.
+\end{enumerate}
+The result is summarized by the following:
+\begin{theorem}[Finite Repeated Games SPE v  ]
+    If a static game $G$ has a unique NE then, for any $ T < \infty$ and $\delta \in [0, 1]$, the $T$-times repeated game $G^T(\delta)$ has a unique SPE. In the SPE, the unique NE of $G$ is played in every period.
+\end{theorem}
+We define the \textbf{grim-trigger} stratgey to be the strategy of 
+starting with $C$ and switching to $D$ only if anyone ever players $D$
+after. The corresponding result for grim trigger is the following:
+\begin{theorem}[Infinite RG Grim-Trigger SPE]
+    In the infinitely repeated PD, grim trigger strategies are a SPE i§  $\delta \ge \frac{1}{2}$
+\end{theorem}
+
+This will not tell us that the players \textit{will} cooperate, however,
+as there can be many equilibria. This idea is rigorized in the following
+result:
+\begin{theorem}[Folk Theorem]
+    Consider any action profile a such that there exists a SPE where $u_i (a^{NE}) < u_i (a)$ for all $i \in  I$ . There exists some $\bar \delta < 1$ such that, for any $\delta > \bar\delta$ there is a SPE where a is played in every period. 
+\end{theorem}
+
+\subsection{Social Norms and Decentralized Repeated Games}
+
+Define cooperative equilibria is being those that incur cost 
+to benefit someone else. We define cooperative equilibria in the game
+theoretic view as SPE in repeated games. We usually view social norms 
+as arising in decentralized repeated games, where not everyone interacts
+directly with each other in every period. $\newline$
+
+One such simple model of decentralized society is a \textbf{repeated
+game with random matching}: here there are $N$ players, with at each
+player at time $t=1,2,\cdots$ splitting randomly into pairs to play a
+symmetric, two-player stage game with some $j(i,t)$. Player $i$'s total
+per-period payoff is then:
+\begin{equation}
+    \sum\limits_{t=1}^{\infty} \delta^{t-1}u(a_i^t,a_{j(i,t)}^t)
+\end{equation}
+Note that players only observe actions in their own matches. $\newline$
+
+Can cooperation occur in such a model? One can show this is impossible
+if $N \to \infty$ as they can ``disappear into the crowd'' but this is
+not the case for finite $N$ (and correspodning large $\delta$). 
+
+\subsection{Contagion Strategies}
+The anonymous matching version of trigger strategies (where if anyone of your partners
+defected before, you defect) are called \textbf{contagion strategies} as intuitively the
+defecting \textit{action} ``spreads'' like a contagion in society.  
+
+\begin{theorem}
+    In the prisoner's dilemma with anonymous random matching, contagion strategies are a 
+    Nash Equilibrium when players are sufficiently patient.
+\end{theorem}
+
+\subsection{Patience and Small Groups}
+
+In general, we learn where it is easier to cooperate when players are more patient, ie. 
+$\delta$ is higher. Having more information also encourages cooperation. But who is most
+important for cooperation? This can not be done for general symmetric games, but we can
+do this for games on networks. $\newline$
+
+In general, we find cooperation to be easier in smaller groups. This is
+formalized by remarking that the critical discount factor $\bar\delta$
+needed for contagion to support cooperation is increasing in $N$.
+Alternatively, suppose $N$ is fixed but allow each player to play with
+$K$ other players by telling them the outcomes of all her past matches. 
+Then, the higher $K$ leads to faster contagion spread and a lower 
+critical discount factor. Some examples of this include the Maghribi
+in the Western Mediterranean, Jews in the NY diamond industry, etc. 
+
+\subsection{Cooperation on a Network}
+Now suppose that we play a cooperation game on a network, with the 
+players arranged in a network with edges $E$. In each period $t=1,2,\cdots$, each player $i$ chooses a \textbf{level of cooperation}
+(or \textbf{effort}) $x_i \in \mathbb{R}_{+}$. The effort of a given
+player benefits \textit{everyone} in the network, with player $i$'s 
+payoff being:
+\begin{equation}
+    u_i(x) = \sum_{j \ne i} f(x_j) - x_i
+\end{equation}
+for some increasing and concave function $f(\cdot)$. The network
+matters only in which \textit{information} it provides, not in terms
+of any payoffs. $\newline$
+
+What is the maximum level of cooperation in any NE? Suppose we use 
+contagion stratgies and there is a vector of ``correct'' effort levels
+$\mathbf{x} = (x_1,\cdots,x_n)$ such that each player $i$ exerts $x_i$
+if every neighbor exerts $x_j$. If they observe they take some $x_j' \ne x_j$, they take effort $0$ forever. $\newline$
+
+Note that if a player $i$ deviates today, then player $j$ stops cooperating at $d(i,j)$  
+from now. Thus, a vector of cooperation levels $\mathbf{x} = (x_1,\cdots,x_n)$ can be 
+supported in equilibrium iff for each player $i$, we have the equilibrium payoff:
+\begin{equation}
+    \frac{1}{1-\delta}\left(\sum_{j \ne i} f(x_j) - x_i \right) \ge
+    \sum_{t = 0}^{\infty} \delta^t \sum_{j: d(i,j) > t} f(x_j)
+\end{equation}
+which gives 
+\begin{equation}
+    x_i \le \sum_{j \ne i}\delta^{d(i,j)} f(x_j)
+\end{equation}
+which corresponds to the maximum payoff (when solved for the system
+of equations), which is different for each player depending on the 
+system of equations. Such a system always has a solution using 
+iterated fixed point style convergence methods.  $\newline$
+
+When is it possible to support more cooperation? When players are more
+patient (ie. $\delta$ is higher, the maximum $x_i$s are larger). 
+Alternatively, there is more cooperation when the network is ``denser''
+with $d(i,j)$ smaller. 
+
+\subsection{Recursive Centrality}
+
+Which individuals cooperate more? Intuitively, it is those that either
+have \textit{more} distance $t$ neighbors or those who themselves have
+more distance $t$ neighbors. This idea is similar to Katz-Bonacich 
+centrality, but because our functions $f(\cdot)$ are nonlinear, they
+are more general. We formalize this through the notion of 
+\textbf{recursive centrality} (which is only a partial ordering). 
+$\newline$
+
+More specifcally, $i$ is \textbf{1-more central} than $j$ if $i$ has
+more distance-$t$ neighbors than $j$ for every $t$, ie. 
+\begin{equation}
+    |N_i(t)| \ge |N_j(t)| \quad \forall t \in \mathbb{N}
+\end{equation}
+
+Recursively, we say $i$ is \textbf{s-more central} than $j$ if for 
+every $t$ there is an injection $\psi: N_j(t) \to N_i(t)$ such that, 
+for each $k \in N_j(t)$, $\psi(k)$ is $(s-1)$-more central than $k$. 
+Intuitively, $i$'s distance-$t$ neighbors are more central than $j$'s
+distance $t$ neighbors. We say $i$ is \textbf{recursively more central}
+than $j$ if it is $s$-more central for all $s$. 
+
+\begin{theorem}
+    If $i$ is recursively more central than $j$, then $x_i \ge x_j$.
+\end{theorem}
+
+\section{Information Aggregation (L21)}
+
+How do crowds make choices? Many decisions in society are made by 
+groups of individuals who have differing amounts of information. Are
+crowds smarter or dumber than expert individuals? 
+
+\subsection{Condorcet Jury Theorem}
+
+How do we formalize this notion of wisdom of crowds? Suppose we have a
+jury that all have the same preference of convicting a defendant iff
+they are guilty. Each juror/voter has different information, an
+independent noisy signal of the true state (guilty or innocent). 
+
+\begin{theorem}[Condocert Jury Theorem]
+    If all jurors vote according to their information vote convict if your signal indicates guilt, vote acquit if your signal indicates innocence then for a large jury, with high probability the majority will vote to convict if the defendant is guilty and vote to acquit if the defendant is innocent.
+\end{theorem}
+
+This is an easy consequence of the law of large numbers. However, this
+assumes sincere voting. We now take the ``game theory'' version of the
+jury theorem, assuming strategic voting. $\newline$
+
+A defendant is either guilty or innocent, $\theta \in \{G,I\}$. Prior
+probability the defendant is guiliy is given by $p \in (0,1)$. There are
+$N$ jurors, who must jointly decide whether to convict ($x=G$) or 
+acquit ($x=I$). Assume they get a 
+payoff of $0$ if the correct decision
+is made, $-z$ if $x=G$ but $\theta = I$, or $-(1-z)$ if $x=I$ and 
+$\theta = G$. $\newline$
+
+If there is only one juror, she would convict if and only if $\beta \ge z$,
+ie. the probability of guilt exceeds $z$. $\newline$
+
+Each juror, however, has different information, ie. a conditionally iid
+signal $s \in \{G,I\}$ with distribution 
+\begin{equation}
+    \mathbb{P}(s=G|\theta = G)= 
+    \mathbb{P}(s=I|\theta=I) = q 
+    > 0.5
+\end{equation}
+The decision is $x=G$ if at least a threshold $k^*$ voters vote $G$. Some leading examples:
+\begin{itemize}
+    \item Majority rule: $N$ is odd,
+    $k^* = \frac{N+1}{2}$ 
+    \item Unanimity rule: $k^* = N$
+\end{itemize}
+
+The classical Condocert Jury theorem is more rigorously phrased as follows:
+\begin{theorem}
+    With majoiry rule and sincere voting, 
+    $\mathbb{P}[x = \theta]$ is increasing in $N$ 
+    and converges to $1$ as $N \to \infty$.
+\end{theorem}
+\subsection{Game-Theoretic CJT}
+
+Suppose we now take a Game-Theoretic view, where we assume voters vote
+to maximize payoff, ie. $\mathbb{P}(x = \theta)$. Now suppose we have
+a single player and suppose that $p > q$ (ie. the prior is larger than
+the signal). But then, by Bayes' Rule, we get that 
+\begin{align}
+    \mathbb{P}(\theta = G|s = I) &= \frac{\mathbb{P}(\theta = G \cap s = I)}{\mathbb{P}(\theta = G \cap s = I) + \mathbb{P}(\theta = I \cap s = I)}\\ &= \frac{p(1-q)}{p(1-q)+(1-p)q} > \frac{1}{2}
+\end{align}    
+ie. the signal is not enough to turn over the prior. Thus, sincere
+voting is not an equilibrium. This extends to the multi-player case, ie.
+\begin{equation}
+    \mathbb{P}\!\bigl(\theta = G \,\big|\, s = I \;\cap\; V_{N-1}=0\bigr)
+\;=\;
+\frac{1}{1 + \dfrac{1-p}{p} \,\dfrac{q}{1-q}}
+\end{equation}
+so sincere voting is \textit{not} an equilibrium in game-theoretic CJT. Then what are the
+equilibria? We claim these are the \textbf{symmetric, responsive equilibria} where all 
+voters use the same signal to vote function. 
+
+\begin{theorem}
+    Suppose $k^*(N) = \alpha N$ for some $\alpha \in (0, 1)$ (require at least fraction 
+    $\alpha$ guilty votes to convict). As $N \to \infty$ for any sequence of symmetric responsive equilibria, $\mathbb{P}(x = \theta) \to 1$
+\end{theorem}
+
+Thus, except in unanimity, the CJT survives in ``Bayesian'' Nash equilibrium. Thus, 
+information aggregation still occurs, except in unanimity. 
+
+
+\end{multicols}
+\end{document}
